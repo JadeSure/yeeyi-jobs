@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import JobMap from "./JobMap.jsx";
 import {
   BANDS, CATEGORIES, WINDOW_PRESETS,
@@ -91,6 +91,26 @@ function CopyButton({ text }) {
   return <button className="btn" onClick={copy}>{done ? "已复制" : "复制联系方式"}</button>;
 }
 
+// Extra post fields from build_map.py EXTRA_FIELDS, with short card labels.
+const FIELD_LABELS = [
+  ["公司名称", "公司"], ["招聘类型", "性质"], ["招聘人数", "人数"], ["签证要求", "签证"],
+  ["语言要求", "语言"], ["工作经验", "经验"], ["最低学历", "学历"], ["行业类型", "行业"],
+];
+const LONG_DESCRIPTION = 600; // characters; only ~5% of posts are longer
+
+function Description({ text }) {
+  const [open, setOpen] = useState(false);
+  const long = text.length > LONG_DESCRIPTION;
+  return (
+    <div className="desc">
+      <p className={long && !open ? "clamped" : undefined}>{text}</p>
+      {long && (
+        <button className="link" onClick={() => setOpen(!open)}>{open ? "收起" : "展开全文"}</button>
+      )}
+    </div>
+  );
+}
+
 function JobCard({ job, highlighted }) {
   const band = bandOf(job.refreshed);
   return (
@@ -115,8 +135,11 @@ function JobCard({ job, highlighted }) {
         <dt>工时</dt><dd>{job.hours}</dd>
         <dt>首发</dt><dd>{fmtDate(job.posted)}</dd>
         <dt>联系</dt><dd><span className="contact">{job.contact}</span></dd>
+        {FIELD_LABELS.filter(([key]) => job.fields?.[key]).map(([key, label]) => (
+          <Fragment key={key}><dt>{label}</dt><dd>{job.fields[key]}</dd></Fragment>
+        ))}
       </dl>
-      {job.snippet && <p className="snippet">{job.snippet}…</p>}
+      {job.description && <Description text={job.description} />}
       <div className="actions">
         <a className="btn primary" href={job.url} target="_blank" rel="noopener noreferrer">查看原帖</a>
         <CopyButton text={job.contact} />

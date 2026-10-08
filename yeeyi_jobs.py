@@ -26,6 +26,7 @@ WINDOW_DAYS = 30          # by last refresh (lastpost), renewed posts count
 RECENT_DAYS = 15          # group 1: 0-15 days, group 2: 15-30 days
 MIN_AGE_LIMIT = 60        # exclude posts whose stated upper age limit is below this
 REQUEST_DELAY = 0.5
+DETAIL_VERSION = 2        # bump when fetch_detail output changes, so build_map.py re-fetches cached posts
 
 # yeeyi position_id: 31 清洁工/保洁, 57 保姆/月嫂/育儿嫂, 111 护理, 110 护士 (needs aged-care keyword)
 CORE_POSITIONS = {"31", "57", "111"}
@@ -111,14 +112,20 @@ def fetch_detail(tid):
     if tel and not any(tel in c for c in contacts):
         contacts.insert(0, f"电话:{tel}")
     raw = (info.get("section_4") or {}).get("message") or ""
+    # Keep the poster's layout as plain text: block ends become line breaks, list items become bullets.
+    raw = re.sub(r"<br\s*/?>|</(?:p|div|h[1-6]|li|ul|ol|tr)>", "\n", raw, flags=re.I)
+    raw = re.sub(r"<li[^>]*>", "• ", raw, flags=re.I)
     text = html.unescape(re.sub(r"<[^>]+>", " ", raw))
     text = re.sub(r"<?/?p>", " ", text)  # yeeyi sometimes emits broken "<p<p>" markup
+    lines = [re.sub(r"[ \t　\xa0]+", " ", line).strip() for line in text.splitlines()]
     return {
         "position": fields.get("职位名称") or "",
         "job_type": fields.get("招聘类型") or "",
         "salary": fields.get("工资待遇") or "",
         "contact": " ".join(names[:1] + contacts) or "见帖子",
-        "text": re.sub(r"\s+", " ", text).strip(),
+        "text": "\n".join(line for line in lines if line),
+        "fields": {k: v for k, v in fields.items() if v and v != "不限"},
+        "v": DETAIL_VERSION,
     }
 
 

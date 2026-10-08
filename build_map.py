@@ -19,6 +19,8 @@ GEOCODE_CACHE = HERE / "geocode.json"
 DETAIL_CACHE = HERE / "details_cache.json"
 NOMINATIM = "https://nominatim.openstreetmap.org/search?"
 GEOCODE_UA = {"User-Agent": "yeeyi-jobs-map/1.0 (personal job search map)"}
+# Post fields shown on each card besides salary/hours/contact (already their own rows).
+EXTRA_FIELDS = ["公司名称", "招聘类型", "招聘人数", "签证要求", "语言要求", "工作经验", "最低学历", "行业类型"]
 
 
 def load(path):
@@ -47,7 +49,7 @@ def main():
     for tid, item in items.items():
         if not y.is_candidate(item):
             continue
-        if tid not in details:
+        if details.get(tid, {}).get("v") != y.DETAIL_VERSION:  # missing or parsed by an older version
             try:
                 details[tid] = y.fetch_detail(tid)
             except Exception as e:
@@ -70,7 +72,8 @@ def main():
             "tags": y.tags(item, detail),
             "refreshed": int(item["lastpost"]),
             "posted": int(item["dateline"]),
-            "snippet": detail["text"][:160],
+            "description": detail["text"],
+            "fields": {k: v for k, v in detail.get("fields", {}).items() if k in EXTRA_FIELDS},
             "url": y.BASE + tid,
         })
     jobs.sort(key=lambda j: -j["refreshed"])

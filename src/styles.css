@@ -98,7 +98,10 @@ main { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); ga
 .tag.good { border-color: var(--accent); color: var(--accent); }
 .tag.heavy { border-color: var(--warn); color: var(--warn); }
 .tag.new { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.snippet { font-size: .82rem; color: var(--muted); margin: 0; overflow-wrap: anywhere; }
+.desc { display: grid; gap: 4px; justify-items: start; border-top: 1px dashed var(--line); padding-top: 8px; }
+.desc p { font-size: .88rem; margin: 0; white-space: pre-line; overflow-wrap: anywhere; max-width: 65ch; }
+.desc p.clamped { display: -webkit-box; -webkit-line-clamp: 12; -webkit-box-orient: vertical; overflow: hidden; }
+.link { font: inherit; font-size: .85rem; border: 0; background: none; padding: 0; color: var(--accent); cursor: pointer; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .btn { font: inherit; font-size: .85rem; border: 1px solid var(--line); background: transparent; color: var(--fg);
   border-radius: 6px; padding: 3px 10px; cursor: pointer; text-decoration: none; }
