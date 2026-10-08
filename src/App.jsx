@@ -7,16 +7,23 @@ import {
 
 const PREFS = ["兼职/灵活", "华人友好", "新帖"];
 
-function useDarkMode() {
-  const query = "(prefers-color-scheme: dark)";
-  const [dark, setDark] = useState(() => matchMedia(query).matches);
+const MOBILE_QUERY = "(max-width: 860px)"; // keep in sync with the breakpoint in styles.css
+// Australian phone numbers inside contact text: 04xx xxx xxx, 03 xxxx xxxx, +61 4xx ...
+const PHONE_RE = /((?:\+61\s?|0)[2-478](?:[\s-]?\d){8})/g;
+
+function useMediaQuery(query) {
+  const [hit, setHit] = useState(() => matchMedia(query).matches);
   useEffect(() => {
     const mq = matchMedia(query);
-    const onChange = (e) => setDark(e.matches);
+    const onChange = (e) => setHit(e.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
-  }, []);
-  return dark;
+  }, [query]);
+  return hit;
+}
+
+function windowLabel(d) {
+  return d === 1 ? "24小时" : `${d}天`;
 }
 
 function Chip({ pressed, onClick, children }) {
@@ -27,7 +34,27 @@ function Chip({ pressed, onClick, children }) {
   );
 }
 
-function Timeline({ jobs, days, setDays, windowCount }) {
+// Phone layout: every filter in one sticky, horizontally scrolling row.
+function MobileFilterBar({ days, setDays, cat, setCat, prefs, togglePref }) {
+  return (
+    <div className="mobile-bar" role="group" aria-label="筛选">
+      {WINDOW_PRESETS.map((d) => (
+        <Chip key={d} pressed={days === d} onClick={() => setDays(d)}>{windowLabel(d)}</Chip>
+      ))}
+      <span className="sep" aria-hidden="true" />
+      <Chip pressed={!cat} onClick={() => setCat("")}>全部类型</Chip>
+      {CATEGORIES.map((c) => (
+        <Chip key={c} pressed={cat === c} onClick={() => setCat(c)}>{c}</Chip>
+      ))}
+      <span className="sep" aria-hidden="true" />
+      {PREFS.map((p) => (
+        <Chip key={p} pressed={prefs.has(p)} onClick={() => togglePref(p)}>{p === "新帖" ? "只看新帖" : p}</Chip>
+      ))}
+    </div>
+  );
+}
+
+function Timeline({ jobs, days, setDays, windowCount, compact }) {
   const counts = useMemo(() => {
     const c = new Array(30).fill(0);
     for (const j of jobs) {
@@ -40,18 +67,18 @@ function Timeline({ jobs, days, setDays, windowCount }) {
   const marks = { 0: "今天", 6: "7天", 14: "15天", 29: "30天" };
 
   return (
-    <section className="timeline" aria-label="每天刷新的职位数">
+    <section className={`timeline${compact ? " compact" : ""}`} aria-label="每天刷新的职位数">
       <div className="tl-head">
         <div className="tl-title">
           每天刷新的职位 · 当前显示 <span className="count">{windowCount}</span> 个
         </div>
-        <div className="group" role="group" aria-label="刷新时间">
-          {WINDOW_PRESETS.map((d) => (
-            <Chip key={d} pressed={days === d} onClick={() => setDays(d)}>
-              {d === 1 ? "24小时" : `${d}天`}
-            </Chip>
-          ))}
-        </div>
+        {!compact && (
+          <div className="group" role="group" aria-label="刷新时间">
+            {WINDOW_PRESETS.map((d) => (
+              <Chip key={d} pressed={days === d} onClick={() => setDays(d)}>{windowLabel(d)}</Chip>
+            ))}
+          </div>
+        )}
       </div>
       <div className="bars">
         {counts.map((n, d) => {
@@ -72,11 +99,13 @@ function Timeline({ jobs, days, setDays, windowCount }) {
       <div className="axis">
         {counts.map((_, d) => <span key={d}>{marks[d] || ""}</span>)}
       </div>
-      <div className="bands">
-        {BANDS.map((b, i) => (
-          <span key={b.label}><i className={`b${i}`} />{b.label}</span>
-        ))}
-      </div>
+      {!compact && (
+        <div className="bands">
+          {BANDS.map((b, i) => (
+            <span key={b.label}><i className={`b${i}`} />{b.label}</span>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -89,6 +118,18 @@ function CopyButton({ text }) {
       setTimeout(() => setDone(false), 1500);
     });
   return <button className="btn" onClick={copy}>{done ? "已复制" : "复制联系方式"}</button>;
+}
+
+// Contact text with each phone number as a tap-to-call link.
+function Contact({ text }) {
+  const parts = text.split(PHONE_RE);
+  return (
+    <span className="contact">
+      {parts.map((part, i) =>
+        i % 2 ? <a key={i} href={`tel:${part.replace(/[\s-]/g, "")}`}>{part}</a> : part,
+      )}
+    </span>
+  );
 }
 
 // Extra post fields from build_map.py EXTRA_FIELDS, with short card labels.
@@ -134,7 +175,7 @@ function JobCard({ job, highlighted }) {
         <dt>薪资</dt><dd>{job.salary}</dd>
         <dt>工时</dt><dd>{job.hours}</dd>
         <dt>首发</dt><dd>{fmtDate(job.posted)}</dd>
-        <dt>联系</dt><dd><span className="contact">{job.contact}</span></dd>
+        <dt>联系</dt><dd><Contact text={job.contact} /></dd>
         {FIELD_LABELS.filter(([key]) => job.fields?.[key]).map(([key, label]) => (
           <Fragment key={key}><dt>{label}</dt><dd>{job.fields[key]}</dd></Fragment>
         ))}
@@ -173,11 +214,23 @@ function JobList({ jobs, selected }) {
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [days, setDays] = useState(30);
+  const [days, setDays] = useState(7);
   const [cat, setCat] = useState("");
   const [prefs, setPrefs] = useState(new Set());
   const [selected, setSelected] = useState(null);
-  const dark = useDarkMode();
+  const [view, setView] = useState("list"); // phone only: "list" | "map"
+  const dark = useMediaQuery("(prefers-color-scheme: dark)");
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+
+  const showView = (v) => {
+    setView(v);
+    window.scrollTo({ top: 0 });
+  };
+  // On a phone, tapping a suburb jumps straight to its job list.
+  const selectSuburb = (key) => {
+    setSelected(key);
+    if (isMobile) showView("list");
+  };
 
   useEffect(() => {
     fetch("/jobs.json", { cache: "no-cache" })
@@ -201,20 +254,29 @@ export default function App() {
     });
 
   return (
-    <div className="wrap">
+    <div className={`wrap${isMobile ? ` mobile view-${view}` : ""}`}>
       <header>
-        <h1>墨尔本 清洁 · 客房 · 保姆 · 护理 职位地图</h1>
+        <h1>
+          <span className="full">墨尔本 清洁 · 客房 · 保姆 · 护理 职位地图</span>
+          <span className="short">墨尔本清洁护理职位</span>
+        </h1>
         <div className="stamp">
-          yeeyi 墨尔本招聘 · 近30天刷新过的帖子
-          {data && <> · 数据更新于 <b>{new Date(data.built * 1000).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</b></>}
+          <span className="full">yeeyi 墨尔本招聘 · 近30天刷新过的帖子 · </span>
+          {data && <>数据更新于 <b>{new Date(data.built * 1000).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</b></>}
         </div>
       </header>
 
+      {isMobile && (
+        <MobileFilterBar days={days} setDays={setDays} cat={cat} setCat={setCat} prefs={prefs} togglePref={togglePref} />
+      )}
+
       {error && <p className="empty">数据加载失败（{error}），请刷新页面重试。</p>}
 
-      <Timeline jobs={forTimeline} days={days} setDays={setDays} windowCount={inWindow.length} />
+      {(!isMobile || view === "list") && (
+        <Timeline jobs={forTimeline} days={days} setDays={setDays} windowCount={inWindow.length} compact={isMobile} />
+      )}
 
-      <div className="filters">
+      <div className="filters" hidden={isMobile}>
         <div className="group" role="group" aria-label="类型">
           <span className="group-label">类型</span>
           <Chip pressed={!cat} onClick={() => setCat("")}>全部</Chip>
@@ -233,17 +295,17 @@ export default function App() {
       </div>
 
       <main>
-        <div className="map-pane">
+        <div className="map-pane" hidden={isMobile && view !== "map"}>
           <JobMap
             jobs={inWindow}
             selected={activeSuburb}
-            onSelect={setSelected}
+            onSelect={selectSuburb}
             dark={dark}
             fitKey={`${jobs.length}|${days}|${cat}|${[...prefs].join()}`}
           />
           <p className="map-note">圆点 = 一个区，数字 = 职位数，颜色 = 该区最新一条的刷新时间（越深越新）。点圆点只看这个区。</p>
         </div>
-        <section className="list-pane" aria-live="polite">
+        <section className="list-pane" aria-live="polite" hidden={isMobile && view !== "list"}>
           <div className="list-head">
             <h2><span className="count">{shown.length}</span> 个职位，越新越靠前</h2>
             {activeSuburb && (
@@ -260,6 +322,13 @@ export default function App() {
           {data ? <JobList jobs={shown} selected={activeSuburb} /> : !error && <p className="empty">加载中…</p>}
         </section>
       </main>
+
+      {isMobile && (
+        <nav className="view-switch" aria-label="切换视图">
+          <button aria-pressed={view === "list"} onClick={() => showView("list")}>列表 <span className="count">{shown.length}</span></button>
+          <button aria-pressed={view === "map"} onClick={() => showView("map")}>地图</button>
+        </nav>
+      )}
     </div>
   );
 }

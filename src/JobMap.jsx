@@ -26,6 +26,8 @@ export default function JobMap({ jobs, selected, onSelect, dark, fitKey }) {
   const el = useRef(null);
   const map = useRef(null);
   const pins = useRef(null);
+  const fitRef = useRef(null);
+  const needsFit = useRef(false);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
 
@@ -34,8 +36,11 @@ export default function JobMap({ jobs, selected, onSelect, dark, fitKey }) {
     map.current.attributionControl.setPrefix(false);
     pins.current = L.layerGroup().addTo(map.current);
     L.tileLayer(TILE_URL, { attribution: ATTRIBUTION, maxZoom: 19 }).addTo(map.current);
-    // Leaflet measures its box once; re-measure when layout settles (fonts, phone rotation).
-    const ro = new ResizeObserver(() => map.current.invalidateSize());
+    // Leaflet measures its box once; re-measure when layout settles (fonts, rotation, map view shown).
+    const ro = new ResizeObserver(() => {
+      map.current.invalidateSize();
+      if (needsFit.current) needsFit.current = !fitRef.current();
+    });
     ro.observe(el.current);
     return () => {
       ro.disconnect();
@@ -69,18 +74,25 @@ export default function JobMap({ jobs, selected, onSelect, dark, fitKey }) {
         .bindPopup(`<b>${esc(shortSuburb(list[0].suburb))} · ${list.length}个</b>${rows}${list.length > 6 ? "<br>…" : ""}`)
         .on("click", () => onSelectRef.current(key))
         .addTo(pins.current);
-      if (key === selected) marker.openPopup(); // pins are redrawn on select, so reopen its popup
+      // A popup opened while the map is hidden (phone list view) measures 0px wide and renders broken.
+      if (key === selected && el.current.offsetWidth) marker.openPopup(); // pins are redrawn on select, so reopen its popup
     }
   }, [jobs, selected]);
 
-  // Refit only when the filters change, not when a suburb is picked.
-  useEffect(() => {
-    // Fit to metro pins only; a lone country job (e.g. Apollo Bay) stays on the map but doesn't zoom it out.
+  // Fit to metro pins only; a lone country job (e.g. Apollo Bay) stays on the map but doesn't zoom it out.
+  fitRef.current = () => {
+    if (!el.current.offsetWidth) return false; // hidden (phone list view): fit once it is shown
     const center = L.latLng(MELBOURNE);
     const points = jobs.filter((j) => j.latlng && center.distanceTo(j.latlng) < FIT_RADIUS_M).map((j) => j.latlng);
     map.current.invalidateSize();
     if (points.length) map.current.fitBounds(points, { padding: [24, 24], maxZoom: 12 });
-  }, [fitKey]); // eslint-disable-line react-hooks/exhaustive-deps
+    return true;
+  };
+
+  // Refit only when the filters change, not when a suburb is picked.
+  useEffect(() => {
+    needsFit.current = !fitRef.current();
+  }, [fitKey]);
 
   return <div ref={el} id="map" role="region" aria-label="墨尔本地图" />;
 }
