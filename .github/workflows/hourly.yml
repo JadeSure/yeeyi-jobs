@@ -1,0 +1,62 @@
+name: Hourly job refresh
+
+on:
+  schedule:
+    - cron: "5 * * * *" # every hour (UTC); the gate below keeps 08:00-22:59 Melbourne time, DST-safe
+  workflow_dispatch: # manual "Run workflow" button, skips the time gate
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hourly-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Skip overnight (23:00-07:59 Melbourne)
+        id: gate
+        run: |
+          hour=$(TZ=Australia/Melbourne date +%-H)
+          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$hour" -lt 8 ] || [ "$hour" -gt 22 ]; }; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Melbourne hour $hour: outside 08:00-22:59, skipping."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == 'true'
+
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          python-version: "3.12"
+
+      - name: Report new jobs
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          python3 yeeyi_jobs.py | tee report.txt
+          { echo '## 新增职位'; echo '```'; cat report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Rebuild map data
+        if: steps.gate.outputs.run == 'true'
+        run: python3 build_map.py
+
+      - name: Push data (Vercel redeploys on push)
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          # Commit as the repo owner: Vercel Hobby skips deploys for commits by unknown authors.
+          git config user.name "Shawn-Wang"
+          git config user.email "jadesure17@gmail.com"
+          git add public/jobs.json state.json geocode.json details_cache.json
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "data: hourly refresh"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

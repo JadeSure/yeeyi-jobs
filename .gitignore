@@ -5,6 +5,5 @@ build.log
 node_modules/
 dist/
 .vercel/
-details_cache.json
 .omc/
 .claude/
