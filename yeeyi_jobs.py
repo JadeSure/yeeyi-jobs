@@ -38,6 +38,8 @@ SEARCH_TERMS = ["清洁", "清潔", "保洁", "客房", "housekeep", "clean", "�
                 "陪护", "家政", "保姆", "月嫂", "育儿嫂", "钟点工", "阿姨", "nanny", "carer", "PCA", "NDIS"]
 AGED_CARE_RE = re.compile(r"老人院|养老|養老|aged ?care", re.I)
 SEEKER_RE = re.compile(r"求职|求職|求工作|找工作|求工")
+# Keyword hits that are not cleaning/care jobs: courses, franchise pitches, salons, dry cleaners, office roles.
+NOT_JOB_RE = re.compile(r"课程|課程|RPL|拿证|拿證|加盟|回本|美发|美髮|美容|美甲|发型|髮型|头皮|頭皮|dry ?clean|干洗|乾洗|文职|文職", re.I)
 EXPIRED_RE = re.compile(r"已招到|已招满|已招滿|招满了|已满员|已過期|已过期|停止招聘|已找到|暂停招聘")
 SCAM_RE = re.compile(r"押金|保证金|保證金|培训费|培訓費|报名费|報名費|中介费|中介費|服装费|工服费|入职费|先交|先付|预付|預付")
 # Strip negated mentions like "不收任何费用/无需押金" before scam check.
@@ -110,6 +112,7 @@ def fetch_detail(tid):
         contacts.insert(0, f"电话:{tel}")
     raw = (info.get("section_4") or {}).get("message") or ""
     text = html.unescape(re.sub(r"<[^>]+>", " ", raw))
+    text = re.sub(r"<?/?p>", " ", text)  # yeeyi sometimes emits broken "<p<p>" markup
     return {
         "position": fields.get("职位名称") or "",
         "job_type": fields.get("招聘类型") or "",
@@ -127,7 +130,7 @@ def age_limit(text):
 
 def is_candidate(item):
     """Cheap pre-filter on list data, before fetching the detail page."""
-    if SEEKER_RE.search(item["subject"]):
+    if SEEKER_RE.search(item["subject"]) or NOT_JOB_RE.search(item["subject"]):
         return False
     return item["position_id"] in CORE_POSITIONS or item["position_id"] == NURSE_POSITION or bool(CATEGORY_RE.search(item["subject"]))
 
@@ -258,6 +261,9 @@ def selftest():
     assert SCAM_RE.search(NEGATED_FEE_RE.sub("", "需先交押金200")) is not None
     assert SCAM_RE.search(NEGATED_FEE_RE.sub("", "不收任何押金，免培训费")) is None
     assert EXPIRED_RE.search("本岗位已招满，谢谢")
+    assert not is_candidate({"subject": "Forever Lengths 高级美发沙龙高薪诚聘头皮护理师", "position_id": "0"})
+    assert not is_candidate({"subject": "清洁公司招聘招加盟，3-4月回本", "position_id": "31"})
+    assert is_candidate({"subject": "招做客服接线，做清洁的姐姐", "position_id": "0"})
     print("selftest ok")
 
 
