@@ -41,10 +41,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Report new jobs
+      - name: Crawl yeeyi + 华人贴, rebuild map data, report new jobs
         if: steps.gate.outputs.run == 'true'
         run: |
-          python3 yeeyi_jobs.py | tee report.txt
+          python3 build_map.py | tee report.txt
           { echo '## 新增职位'; echo '```'; cat report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Email new jobs (Gmail)
@@ -56,10 +56,6 @@ jobs:
           NOTIFY_TO: ${{ secrets.NOTIFY_TO }}
           SITE_URL: ${{ vars.SITE_URL }}
         run: python3 notify_email.py report.txt ${{ inputs.test_email && '--test' || '' }}
-
-      - name: Rebuild map data
-        if: steps.gate.outputs.run == 'true'
-        run: python3 build_map.py
 
       - name: Push data (Vercel redeploys on push)
         if: steps.gate.outputs.run == 'true'

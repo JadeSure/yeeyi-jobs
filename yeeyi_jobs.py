@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Hourly watcher for yeeyi Melbourne job posts (cleaning / housekeeping / care / nanny).
+"""Hourly watcher for Melbourne cleaning / housekeeping / care / nanny job posts (yeeyi + 华人贴).
 
 Read-only: fetches public pages, never contacts employers.
 Usage: python3 yeeyi_jobs.py [--limit N]   (--limit 0 = show all new matches)
 """
 import argparse
+import difflib
 import html
 import json
 import os
@@ -20,6 +21,7 @@ time.tzset()
 BASE = "https://www.yeeyi.com/classified-advertisement/au/melbourne/jobs/"
 LIST_API = "https://www.yeeyi.com/api/getSectionList/"
 STATE_FILE = Path(__file__).with_name("state.json")
+DETAIL_CACHE = Path(__file__).with_name("details_cache.json")
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/128 Safari/537.36"}
 DAY = 86400
 WINDOW_DAYS = 30          # by last refresh (lastpost), renewed posts count
@@ -39,6 +41,7 @@ SEARCH_TERMS = ["清洁", "清潔", "保洁", "客房", "housekeep", "clean", "�
                 "陪护", "家政", "保姆", "月嫂", "育儿嫂", "钟点工", "阿姨", "nanny", "carer", "PCA", "NDIS"]
 AGED_CARE_RE = re.compile(r"老人院|养老|養老|aged ?care", re.I)
 SEEKER_RE = re.compile(r"求职|求職|求工作|找工作|求工")
+MALE_ONLY_RE = re.compile(r"只招男|只要男|限男|仅限男|只限男|僅限男")
 # Keyword hits that are not cleaning/care jobs: courses, franchise pitches, salons, dry cleaners, office roles.
 NOT_JOB_RE = re.compile(r"课程|課程|RPL|拿证|拿證|加盟|回本|美发|美髮|美容|美甲|发型|髮型|头皮|頭皮|dry ?clean|干洗|乾洗|文职|文職", re.I)
 EXPIRED_RE = re.compile(r"已招到|已招满|已招滿|招满了|已满员|已過期|已过期|停止招聘|已找到|暂停招聘")
@@ -129,7 +132,20 @@ def fetch_detail(tid):
     }
 
 
+CN_DIGITS = {c: i for i, c in enumerate("零一二三四五六七八九")}
+
+
+def arabic_numbers(text):
+    """'五十五岁' -> '55岁', keycap emoji '2️⃣5️⃣' -> '25', so the age patterns can read them."""
+    text = re.sub(r"(\d)\ufe0f?\u20e3", r"\1", text).replace("➖", "-")
+    def two_digit(m):
+        tens, ones = m.group(1), m.group(2)
+        return str((CN_DIGITS[tens] if tens else 1) * 10 + (CN_DIGITS[ones] if ones else 0))
+    return re.sub(r"([二三四五六七八九])?十([一二三四五六七八九])?", two_digit, text)
+
+
 def age_limit(text):
+    text = arabic_numbers(text)
     limits = [int(m.group(1)) for p in AGE_PATTERNS for m in p.finditer(text)]
     limits = [n for n in limits if 18 <= n <= 80]
     return min(limits) if limits else None
@@ -152,6 +168,8 @@ def reject_reason(item, detail):
         return "category"
     if EXPIRED_RE.search(blob):
         return "expired"
+    if MALE_ONLY_RE.search(blob):
+        return "male only"
     if SCAM_RE.search(NEGATED_FEE_RE.sub("", blob)):
         return "fee/deposit"
     limit = age_limit(blob)
@@ -183,80 +201,117 @@ def format_job(n, item, detail):
     refreshed = time.strftime("%m-%d %H:%M", time.localtime(ts))
     posted = time.strftime("%Y-%m-%d", time.localtime(int(item["dateline"])))
     tag = f" [{', '.join(tags(item, detail))}]" if tags(item, detail) else ""
+    source = f"【{item['source']}】" if item.get("source") else ""
     return (
-        f"{n}. {item['subject'].strip()}{tag}\n"
+        f"{n}. {source}{item['subject'].strip()}{tag}\n"
         f"   区域: {item.get('suburb') or '-'} | 薪资: {detail['salary'] or '面议'} | 工时: {hours_hint(item, detail)}\n"
         f"   刷新: {refreshed} (首发 {posted}) | 联系: {detail['contact']}\n"
-        f"   {BASE}{item['tid']}"
+        f"   {item_url(item)}"
     )
 
 
-def load_state():
-    if STATE_FILE.exists():
-        return json.loads(STATE_FILE.read_text())
-    # reported: {tid: lastpost when shown}; pending: overflow items not yet shown; details: detail-page cache
-    return {"last_run": 0, "reported": {}, "pending": {}, "details": {}}
+def item_url(item):
+    return item.get("url") or BASE + item["tid"]
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--limit", type=int, default=10, help="max jobs to show (0 = all)")
-    args = ap.parse_args()
+def load_json(path):
+    return json.loads(path.read_text()) if path.exists() else {}
 
-    state = load_state()
-    now = time.time()
-    window_start = now - WINDOW_DAYS * DAY
-    # After the first run only re-scan what changed since last run (+1h margin).
-    stop_before = max(window_start, state["last_run"] - 3600) if state["last_run"] else window_start
-    reported = state["reported"]
-    details = state["details"]
 
-    items = crawl_list(stop_before)
-    for tid, item in state.get("pending", {}).items():
-        if int(item["lastpost"]) >= window_start:
-            items.setdefault(tid, item)
-    matches = []
-    for tid, item in items.items():
-        if tid in reported or not is_candidate(item):
+def _norm_title(title):
+    return re.sub(r"[\W_]+", "", title.lower())
+
+
+def _phones(text):
+    return {re.sub(r"\D", "", p) for p in re.findall(r"04\d{2}[\s-]?\d{3}[\s-]?\d{3}", text)}
+
+
+def is_duplicate(hrt_detail, yeeyi_pairs):
+    """华人贴 often reposts yeeyi ads: same title, or same masked phone (041*****88) and same suburb."""
+    title = _norm_title(hrt_detail["title"])
+    mask = re.search(r"(04\d)\*+(\d{2})", hrt_detail["contact"])
+    suburb = hrt_detail["suburb"].split(",")[0].strip().lower()
+    for item, detail in yeeyi_pairs:
+        if difflib.SequenceMatcher(None, title, _norm_title(item["subject"])).ratio() >= 0.8:
+            return True
+        if mask and suburb and suburb in (item.get("suburb") or "").lower():
+            if any(p.startswith(mask.group(1)) and p.endswith(mask.group(2)) for p in _phones(detail["contact"] + detail["text"])):
+                return True
+    return False
+
+
+def current_matches(details, now=None):
+    """Every post (yeeyi + 华人贴) refreshed in the last WINDOW_DAYS that passes the filters, newest first.
+    `details` is the detail-page cache; it is updated in place and should be saved by the caller."""
+    import huarentie  # local module; imported here to avoid a cycle (it uses http_read/UA from this one)
+
+    window_start = (now or time.time()) - WINDOW_DAYS * DAY
+    pairs = []
+    for tid, item in crawl_list(window_start).items():
+        if not is_candidate(item):
             continue
-        if tid not in details:
+        if details.get(tid, {}).get("v") != DETAIL_VERSION:
             try:
                 details[tid] = fetch_detail(tid)
             except Exception as e:  # one bad post must not kill the run
                 print(f"warn: detail {tid} failed: {e}", file=sys.stderr)
                 continue
             time.sleep(REQUEST_DELAY)
-        if reject_reason(item, details[tid]) is None:
-            matches.append(item)
+        pairs.append(({**item, "source": "yeeyi"}, details[tid]))
+    yeeyi_pairs = list(pairs)
+    keep = {item["tid"] for item, _ in pairs}
+    try:
+        hrt_items, hrt_listed = huarentie.collect(window_start, details)
+        keep |= hrt_listed
+        for tid, item in hrt_items.items():
+            if is_candidate(item) and not is_duplicate(details[tid], yeeyi_pairs):
+                pairs.append((item, details[tid]))
+    except Exception as e:  # a second source being down must not stop the yeeyi report
+        print(f"warn: huarentie skipped: {e}", file=sys.stderr)
+    matches = [(item, detail) for item, detail in pairs if reject_reason(item, detail) is None]
+    matches.sort(key=lambda m: -int(m[0]["lastpost"]))
+    for k in [k for k in details if k not in keep]:
+        del details[k]
+    return matches
 
-    matches.sort(key=lambda x: -int(x["lastpost"]))
-    shown = matches[: args.limit] if args.limit else matches
+
+def report_new(matches, limit=10, now=None):
+    """Print matches not reported before (newest first, at most `limit`) and remember them in state.json."""
+    now = now or time.time()
+    window_start = now - WINDOW_DAYS * DAY
+    reported = load_json(STATE_FILE).get("reported", {})
+    new = [(item, detail) for item, detail in matches if item["tid"] not in reported]
+    shown = new[:limit] if limit else new
     recent_cut = now - RECENT_DAYS * DAY
     groups = [
-        (f"近{RECENT_DAYS}天内刷新", [x for x in shown if int(x["lastpost"]) >= recent_cut]),
-        (f"{RECENT_DAYS}-{WINDOW_DAYS}天前刷新（可询问是否还缺人）", [x for x in shown if int(x["lastpost"]) < recent_cut]),
+        (f"近{RECENT_DAYS}天内刷新", [m for m in shown if int(m[0]["lastpost"]) >= recent_cut]),
+        (f"{RECENT_DAYS}-{WINDOW_DAYS}天前刷新（可询问是否还缺人）", [m for m in shown if int(m[0]["lastpost"]) < recent_cut]),
     ]
-
     if not shown:
         print("本小时无新增职位")
     else:
-        print(f"yeeyi 墨尔本新增职位 {len(shown)} 条" + (f"（另有 {len(matches) - len(shown)} 条下次显示）" if len(matches) > len(shown) else ""))
+        # Unshown overflow stays unreported, so it comes up again next run.
+        print(f"墨尔本新增职位 {len(shown)} 条" + (f"（另有 {len(new) - len(shown)} 条下次显示）" if len(new) > len(shown) else ""))
         n = 0
         for title, group in groups:
             if group:
                 print(f"\n## {title}")
-                for item in group:
+                for item, detail in group:
                     n += 1
-                    print(format_job(n, item, details[item["tid"]]))
-
-    reported.update({x["tid"]: int(x["lastpost"]) for x in shown})
+                    print(format_job(n, item, detail))
+    reported.update({item["tid"]: int(item["lastpost"]) for item, _ in shown})
     # Forget posts outside the window; if one gets renewed later it counts as new again.
-    state["reported"] = {k: v for k, v in reported.items() if v >= window_start}
-    # Overflow is kept as pending so it shows up next run even if it falls out of the incremental scan.
-    state["pending"] = {x["tid"]: x for x in matches[len(shown):]}
-    state["details"] = {k: v for k, v in details.items() if k in items and k not in state["reported"]}
-    state["last_run"] = now
-    STATE_FILE.write_text(json.dumps(state, ensure_ascii=False))
+    STATE_FILE.write_text(json.dumps({"reported": {k: v for k, v in reported.items() if v >= window_start}}, ensure_ascii=False))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--limit", type=int, default=10, help="max jobs to show (0 = all)")
+    args = ap.parse_args()
+    details = load_json(DETAIL_CACHE)
+    matches = current_matches(details)
+    DETAIL_CACHE.write_text(json.dumps(details, ensure_ascii=False))
+    report_new(matches, args.limit)
 
 
 def selftest():
@@ -271,6 +326,15 @@ def selftest():
     assert not is_candidate({"subject": "Forever Lengths 高级美发沙龙高薪诚聘头皮护理师", "position_id": "0"})
     assert not is_candidate({"subject": "清洁公司招聘招加盟，3-4月回本", "position_id": "31"})
     assert is_candidate({"subject": "招做客服接线，做清洁的姐姐", "position_id": "0"})
+    assert age_limit("女性，五十岁以下，手脚麻利") == 50
+    assert age_limit("女性，五十五岁以下") == 55
+    assert age_limit("年龄 2️⃣5️⃣➖4️⃣0️⃣岁以内") == 40
+    assert age_limit("工作十小时") is None
+    assert MALE_ONLY_RE.search("#墨尔本Glen Waverley诚聘园艺助工，只招男工#")
+    d = {"title": "Box Hill招跟车清洁女工", "contact": "Helen 041*****88", "suburb": "Box Hill, VIC 3128"}
+    assert is_duplicate(d, [({"subject": "Box Hill 招跟车清洁女工！", "suburb": "Box Hill"}, {"contact": "", "text": ""})])
+    assert is_duplicate(d, [({"subject": "完全不同", "suburb": "Box Hill, VIC"}, {"contact": "电话:0412 345 688", "text": ""})])
+    assert not is_duplicate(d, [({"subject": "完全不同", "suburb": "Clayton"}, {"contact": "电话:0412345688", "text": ""})])
     print("selftest ok")
 
 

@@ -134,7 +134,7 @@ function Contact({ text }) {
 
 // Extra post fields from build_map.py EXTRA_FIELDS, with short card labels.
 const FIELD_LABELS = [
-  ["公司名称", "公司"], ["招聘类型", "性质"], ["招聘人数", "人数"], ["签证要求", "签证"],
+  ["公司名称", "公司"], ["性别要求", "性别"], ["招聘类型", "性质"], ["招聘人数", "人数"], ["签证要求", "签证"],
   ["语言要求", "语言"], ["工作经验", "经验"], ["最低学历", "学历"], ["行业类型", "行业"],
 ];
 const LONG_DESCRIPTION = 600; // characters; only ~5% of posts are longer
@@ -166,6 +166,7 @@ function JobCard({ job, highlighted }) {
       <div className="tags">
         {job.isNew ? <span className="tag new">新帖</span> : <span className="tag">老帖刷新</span>}
         <span className="tag">{job.cat}</span>
+        <span className="tag">{job.source || "yeeyi"}</span>
         {job.tags.map((t) => (
           <span key={t} className={`tag ${t === "体力偏重" ? "heavy" : "good"}`}>{t}</span>
         ))}
