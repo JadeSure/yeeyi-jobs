@@ -1,9 +1,9 @@
 name: Hourly job refresh
 
 on:
-  schedule:
-    - cron: "5 * * * *" # every hour (UTC); the gate below keeps 08:00-22:59 Melbourne time, DST-safe
-  workflow_dispatch: # manual "Run workflow" button, skips the time gate
+  # Triggered every 30 min (08:05-22:35 Melbourne) by cron-job.org via the dispatch API;
+  # GitHub's own schedule was dropped because it fired only every few hours.
+  workflow_dispatch:
     inputs:
       test_email:
         description: "Send a test email even if there are no new jobs"
@@ -22,33 +22,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Skip overnight (23:00-07:59 Melbourne)
-        id: gate
-        run: |
-          hour=$(TZ=Australia/Melbourne date +%-H)
-          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$hour" -lt 8 ] || [ "$hour" -gt 22 ]; }; then
-            echo "run=false" >> "$GITHUB_OUTPUT"
-            echo "Melbourne hour $hour: outside 08:00-22:59, skipping."
-          else
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: actions/checkout@v4
-        if: steps.gate.outputs.run == 'true'
 
       - uses: actions/setup-python@v5
-        if: steps.gate.outputs.run == 'true'
         with:
           python-version: "3.12"
 
       - name: Crawl yeeyi + 华人贴, rebuild map data, report new jobs
-        if: steps.gate.outputs.run == 'true'
         run: |
           python3 build_map.py | tee report.txt
           { echo '## 新增职位'; echo '```'; cat report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Email new jobs (Gmail)
-        if: steps.gate.outputs.run == 'true'
         continue-on-error: true # a mail problem must not block the map update
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
@@ -58,7 +43,6 @@ jobs:
         run: python3 notify_email.py report.txt ${{ inputs.test_email && '--test' || '' }}
 
       - name: Push data (Vercel redeploys on push)
-        if: steps.gate.outputs.run == 'true'
         run: |
           # Commit as the repo owner: Vercel Hobby skips deploys for commits by unknown authors.
           git config user.name "Shawn-Wang"
