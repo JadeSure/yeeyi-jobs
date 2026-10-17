@@ -75,7 +75,7 @@ def main():
     print(f"{len(jobs)} jobs {by_source}, {located} located, {len({j['suburb'] for j in jobs})} suburbs -> {OUT.relative_to(HERE)}",
           file=sys.stderr)
     if "--no-report" not in sys.argv:
-        y.report_new(matches)
+        y.report_new(matches, km_by_tid={j['tid']: y.distance_km(j['latlng']) for j in jobs})
 
 
 if __name__ == "__main__":

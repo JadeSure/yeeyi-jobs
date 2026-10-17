@@ -6,6 +6,7 @@ Usage: python3 yeeyi_jobs.py [--limit N]   (--limit 0 = show all new matches)
 """
 import argparse
 import difflib
+import math
 import html
 import json
 import os
@@ -26,6 +27,10 @@ UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
 DAY = 86400
 WINDOW_DAYS = 30          # by last refresh (lastpost), renewed posts count
 RECENT_DAYS = 15          # group 1: 0-15 days, group 2: 15-30 days
+HOME = (-37.8190, 145.1250)  # Box Hill: alerts are grouped by distance from here
+NEAR_KM = 10              # "附近" group; already-sent posts here are re-alerted when renewed
+MAX_KM = 25               # posts farther than this are not emailed (still shown on the map)
+REALERT_DAYS = 7          # re-alert a nearby post at most once per this many days
 MIN_AGE_LIMIT = 60        # exclude posts whose stated upper age limit is below this
 REQUEST_DELAY = 0.5
 DETAIL_VERSION = 2        # bump when fetch_detail output changes, so build_map.py re-fetches cached posts
@@ -196,15 +201,29 @@ def hours_hint(item, detail):
     return " / ".join(parts) or "未注明"
 
 
-def format_job(n, item, detail):
+def distance_km(latlng):
+    """Great-circle distance from HOME, or None when the post has no location."""
+    if not latlng:
+        return None
+    lat1, lon1, lat2, lon2 = map(math.radians, (*HOME, *latlng))
+    a = math.sin((lat2 - lat1) / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin((lon2 - lon1) / 2) ** 2
+    return 6371 * 2 * math.asin(math.sqrt(a))
+
+
+def area_unknown(item):
+    """yeeyi fills in "Melbourne, VIC 3000" when the poster gives no suburb, so CBD distance is meaningless."""
+    return bool(re.match(r"\s*melbourne\s*,?\s*(vic)?\s*(3000)?\s*$", item.get("suburb") or "", re.I))
+
+
+def format_job(n, item, detail, km=None, note=""):
     ts = int(item["lastpost"])
     refreshed = time.strftime("%m-%d %H:%M", time.localtime(ts))
     posted = time.strftime("%Y-%m-%d", time.localtime(int(item["dateline"])))
     tag = f" [{', '.join(tags(item, detail))}]" if tags(item, detail) else ""
     source = f"【{item['source']}】" if item.get("source") else ""
     return (
-        f"{n}. {source}{item['subject'].strip()}{tag}\n"
-        f"   区域: {item.get('suburb') or '-'} | 薪资: {detail['salary'] or '面议'} | 工时: {hours_hint(item, detail)}\n"
+        f"{n}. {note}{source}{item['subject'].strip()}{tag}\n"
+        f"   区域: {item.get('suburb') or '-'}{f'（离Box Hill约{km:.0f}公里）' if km is not None and not area_unknown(item) else ''} | 薪资: {detail['salary'] or '面议'} | 工时: {hours_hint(item, detail)}\n"
         f"   刷新: {refreshed} (首发 {posted}) | 联系: {detail['contact']}\n"
         f"   {item_url(item)}"
     )
@@ -275,33 +294,71 @@ def current_matches(details, now=None):
     return matches
 
 
-def report_new(matches, limit=10, now=None):
-    """Print matches not reported before (newest first, at most `limit`) and remember them in state.json."""
+def report_new(matches, limit=10, now=None, km_by_tid=None):
+    """Print the alert (new posts plus renewed nearby ones, grouped by distance from HOME) and update state.json.
+
+    New posts: never sent before; at most `limit`, nearest first, farther than MAX_KM skipped.
+    Still hiring: nearby posts sent before, refreshed since, last sent REALERT_DAYS+ ago; at most `limit`.
+    Unshown overflow stays unsent, so it comes up again next run.
+    """
     now = now or time.time()
     window_start = now - WINDOW_DAYS * DAY
-    reported = load_json(STATE_FILE).get("reported", {})
-    new = [(item, detail) for item, detail in matches if item["tid"] not in reported]
-    shown = new[:limit] if limit else new
-    recent_cut = now - RECENT_DAYS * DAY
-    groups = [
-        (f"近{RECENT_DAYS}天内刷新", [m for m in shown if int(m[0]["lastpost"]) >= recent_cut]),
-        (f"{RECENT_DAYS}-{WINDOW_DAYS}天前刷新（可询问是否还缺人）", [m for m in shown if int(m[0]["lastpost"]) < recent_cut]),
-    ]
-    if not shown:
+    state = load_json(STATE_FILE)
+    reported = state.get("reported", {})  # tid -> lastpost when last sent
+    sent_at = state.get("sent_at", {})    # tid -> time last sent (older entries fall back to `reported`)
+    km_by_tid = km_by_tid or {}
+
+    def group_of(item):
+        km = km_by_tid.get(item["tid"])
+        if area_unknown(item) or km is None:
+            return 2
+        return 0 if km < NEAR_KM else (1 if km <= MAX_KM else None)
+
+    new, renewed = [], []
+    for item, detail in matches:
+        g, tid = group_of(item), item["tid"]
+        if g is None:
+            continue
+        if tid not in reported:
+            new.append((g, item, detail))
+        elif g == 0 and int(item["lastpost"]) > reported[tid] and now - sent_at.get(tid, reported[tid]) >= REALERT_DAYS * DAY:
+            renewed.append((g, item, detail))
+    new.sort(key=lambda m: m[0])  # stable: keeps newest-first inside each group
+    shown_new = new[:limit] if limit else new
+    shown_renewed = renewed[:limit] if limit else renewed
+
+    if not shown_new and not shown_renewed:
         print("本小时无新增职位")
     else:
-        # Unshown overflow stays unreported, so it comes up again next run.
-        print(f"墨尔本新增职位 {len(shown)} 条" + (f"（另有 {len(new) - len(shown)} 条下次显示）" if len(new) > len(shown) else ""))
+        head = []
+        if shown_new:
+            head.append(f"墨尔本新增职位 {len(shown_new)} 条")
+        if shown_renewed:
+            head.append(f"Box Hill 附近仍在招 {len(shown_renewed)} 条")
+        more = len(new) - len(shown_new) + len(renewed) - len(shown_renewed)
+        print("，".join(head) + (f"（另有 {more} 条下次显示）" if more > 0 else ""))
+        titles = [f"Box Hill 附近（{NEAR_KM}公里内）", f"其他区域（{NEAR_KM}–{MAX_KM}公里）", "区域未写明（地址只写 Melbourne 3000，看标题）"]
         n = 0
-        for title, group in groups:
+        for g, title in enumerate(titles):
+            group = [m for m in shown_new if m[0] == g]
             if group:
                 print(f"\n## {title}")
-                for item, detail in group:
+                for _, item, detail in group:
                     n += 1
-                    print(format_job(n, item, detail))
-    reported.update({item["tid"]: int(item["lastpost"]) for item, _ in shown})
+                    print(format_job(n, item, detail, km_by_tid.get(item["tid"])))
+        if shown_renewed:
+            print(f"\n## Box Hill 附近·之前推送过、最近又刷新（说明还在招人）")
+            for _, item, detail in shown_renewed:
+                n += 1
+                last = time.strftime("%m-%d", time.localtime(sent_at.get(item["tid"], reported[item["tid"]])))
+                print(format_job(n, item, detail, km_by_tid.get(item["tid"]), note=f"【仍在招·上次推送{last}】"))
+
+    for _, item, _ in shown_new + shown_renewed:
+        reported[item["tid"]] = int(item["lastpost"])
+        sent_at[item["tid"]] = int(now)
     # Forget posts outside the window; if one gets renewed later it counts as new again.
-    STATE_FILE.write_text(json.dumps({"reported": {k: v for k, v in reported.items() if v >= window_start}}, ensure_ascii=False))
+    keep = {k: v for k, v in reported.items() if v >= window_start}
+    STATE_FILE.write_text(json.dumps({"reported": keep, "sent_at": {k: v for k, v in sent_at.items() if k in keep}}, ensure_ascii=False))
 
 
 def main():
@@ -330,6 +387,8 @@ def selftest():
     assert age_limit("女性，五十五岁以下") == 55
     assert age_limit("年龄 2️⃣5️⃣➖4️⃣0️⃣岁以内") == 40
     assert age_limit("工作十小时") is None
+    assert 0 < distance_km((-37.8770, 145.1650)) < 10  # Glen Waverley ~7.5 km from Box Hill
+    assert area_unknown({"suburb": "Melbourne, VIC 3000"}) and not area_unknown({"suburb": "West Melbourne, VIC 3003"})
     assert MALE_ONLY_RE.search("#墨尔本Glen Waverley诚聘园艺助工，只招男工#")
     d = {"title": "Box Hill招跟车清洁女工", "contact": "Helen 041*****88", "suburb": "Box Hill, VIC 3128"}
     assert is_duplicate(d, [({"subject": "Box Hill 招跟车清洁女工！", "suburb": "Box Hill"}, {"contact": "", "text": ""})])
