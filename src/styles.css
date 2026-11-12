@@ -43,6 +43,7 @@ header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content:
 h1 { font-size: 1.35rem; font-weight: 700; margin: 0; text-wrap: balance; }
 .stamp { color: var(--muted); font-size: .85rem; }
 .stamp b { font-family: var(--font-num); font-weight: 500; color: var(--fg); }
+.stamp a { color: var(--accent); }
 .count { font-family: var(--font-num); }
 
 /* Freshness strip: one bar per day, today on the left */

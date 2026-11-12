@@ -264,6 +264,7 @@ export default function App() {
         <div className="stamp">
           <span className="full">yeeyi 墨尔本招聘 · 近30天刷新过的帖子 · </span>
           {data && <>数据更新于 <b>{new Date(data.built * 1000).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</b></>}
+          {" · "}<a href="/research/">清洁还是开 Uber？</a>
         </div>
       </header>
 
