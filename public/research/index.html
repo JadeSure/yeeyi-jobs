@@ -11,7 +11,7 @@
 <style>
 :root {
   --bg: #f3f5f4; --panel: #ffffff; --fg: #1d2724; --muted: #5d6b67; --line: #d9e0dd;
-  --accent: #0b5f55; --accent-soft: #d4ebe6; --warn: #9a5b12;
+  --accent: #0b5f55; --accent-soft: #d4ebe6; --warn: #9a5b12; --warn-soft: #f5e3c8; --warn-faint: #fbf1e3;
   --font-body: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   --font-num: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
   color-scheme: light;
@@ -19,7 +19,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #111715; --panel: #19211f; --fg: #e3ebe8; --muted: #9aaba6; --line: #2c3835;
-    --accent: #6fd3c2; --accent-soft: #1f3a36; --warn: #e0a458;
+    --accent: #6fd3c2; --accent-soft: #1f3a36; --warn: #e0a458; --warn-soft: #4a3518; --warn-faint: #2e2416;
     color-scheme: dark;
   }
 }
@@ -30,6 +30,7 @@ body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--fo
 .wrap { max-width: 960px; margin: 0 auto; padding: 16px 16px 32px; display: grid; gap: 14px; }
 h1 { font-size: 1.35rem; font-weight: 700; margin: 0; text-wrap: balance; }
 h2 { font-size: 1.05rem; margin: 0 0 4px; }
+h3 { font-size: .95rem; margin: 16px 0 4px; }
 .sub { color: var(--muted); font-size: .85rem; margin: 2px 0 0; }
 a { color: var(--accent); }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
@@ -72,8 +73,28 @@ th { color: var(--muted); font-weight: 500; }
 th:first-child, td:first-child { min-width: 5.2em; }
 @media (max-width: 420px) { th, td { padding: 6px; } }
 caption { text-align: left; font-weight: 700; padding: 0 0 6px; }
+.heat, .wk { table-layout: fixed; }
+.heat th, .heat td, .wk th, .wk td { text-align: center; vertical-align: middle; padding: 5px 2px; }
+.heat th:first-child, .heat td:first-child, .wk th:first-child, .wk td:first-child { width: 2.6em; min-width: 0; }
+.heat th, .wk th { font-size: .72rem; }
+.heat td, .wk td { font-family: var(--font-num); font-size: .8rem; }
+.wk { border-collapse: separate; border-spacing: 2px; }
+.wk th, .wk td { border-bottom: 0; border-radius: 4px; }
+.heat .c2 { background: var(--accent-soft); }
+.heat .c3 { background: var(--accent-soft); font-weight: 700; box-shadow: inset 0 0 0 2px var(--accent); }
+.heat .u2 { background: var(--warn-soft); }
+.heat .u3 { background: var(--warn-soft); font-weight: 700; box-shadow: inset 0 0 0 2px var(--warn); }
+.wk .u2 { background: var(--warn-faint); }
+.wk .u3 { background: var(--warn-soft); font-weight: 700; }
+.lo { color: var(--muted); }
+.nw { white-space: nowrap; }
+.vt .badge { white-space: normal; }
+.wk .cl { box-shadow: inset 0 0 0 2px var(--accent); }
+.air { font-size: .9em; font-family: var(--font-body); }
+.vt th:first-child, .vt td:first-child { min-width: 0; white-space: nowrap; }
 details { border-top: 1px solid var(--line); padding: 6px 0; }
 h2 + details { border-top: 0; }
+.hint + details { margin-top: 10px; }
 summary { font-weight: 700; cursor: pointer; padding: 4px 0; }
 footer { color: var(--muted); font-size: .8rem; display: grid; gap: 6px; }
 footer p { margin: 0; }
@@ -89,13 +110,70 @@ footer p { margin: 0; }
 
 <section class="card concl" aria-label="结论">
   <h2>结论</h2>
+  <div class="item">高峰期：退租清洁（2 月最旺）跟 Uber（10–12 月旺）错开；日常家政〔说〕10–12 月也旺，跟 Uber 撞；短租退房 1、3、11 月旺，只有 11 月跟 Uber 重合。一周里，开 UberX 最差的一档是工作日白天（扣抽成、GST 和车辆成本后每小时约 $10–14），正好是家政、短租退房的时段；最好的是周五周六 21 点到凌晨 3 点（约 $26–31），这时清洁活很少。会撞的是办公室晚班、早班和周末白天。<a href="#peaks">见下面</a><span class="badge mid">中</span><span class="badge">退租 2 月最旺：高</span><span class="badge low">家政按月：低</span><span class="badge mid">每小时金额：低到中</span></div>
   <div class="item">清洁和 Uber 一起做，比例看车和季节。有 Black 车、机场 Black 单够的话，Uber 占 50–75%：10–12 月机场明显旺（9 月、1 月略高），多开；2、3、7 月退租旺，多做清洁。没有 Black 车，Uber 只开周五周六夜和清晨机场来回，清洁占 70–80%。<span class="badge low">低</span></div>
   <div class="item">按 award 发工资的清洁（算上通勤 $28–34/h，另加 12% super），约是 Uber 平均（~$17/h）的 1.6–2 倍。<span class="badge">高</span></div>
   <div class="item">Black 机场来回、来回都载客，能做出很高的流水。一位开奔驰 GLC 一类 SUV 的司机〔说〕10 月流水 $22,390〔硬〕；排除法推出他大部分时间在跑 Black 机场来回，倒推约 233 单、每周 50–65 小时，到手约 $8,000–10,800（未扣个税）〔估〕。<span class="badge low">低</span></div>
   <div class="item">流水不等于到手：Black 机场到市区乘客付 $97，司机实拿约 $61；市区到机场乘客付 $95，司机实拿约 $63；再扣 GST 和车的成本。<span class="badge mid">中</span></div>
-  <div class="item">季节：退租清洁 2 月最旺（按天 126）；机场 12 月最旺（按天 107），5 月最淡；网约车 12 月最旺、1 月最淡。<span class="badge mid">中</span><span class="badge">2 月最旺：高</span></div>
   <div class="item">没车：每周开 10–25 小时 UberX，买 2019 Corolla Hybrid 比租车每周多挣 $27–93；车同时用来做清洁和开 Uber 才明显划算（每周约 +$249）。<span class="badge mid">中</span></div>
   <div class="item">租豪车混在市区普通单里跑 Black 不划算（Black 单要占 36–52%）。墨尔本没找到能跑 Uber 的 GLC 出租；能租来跑 Black 的只有 Splend 的 Lexus ES、奔驰 EQB、Cadillac Lyriq，都要锁 52 周。<span class="badge mid">中</span></div>
+</section>
+
+<section class="card" id="peaks">
+  <h2>高峰期：Uber 和清洁撞不撞</h2>
+  <div class="tbl"><table class="vt">
+    <caption>一年和一周里：Uber 和清洁的旺季撞不撞</caption>
+    <thead><tr><td></td><th>Uber 旺</th><th>清洁旺</th><th>撞不撞</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">一年</th><td>10–12 月（12 月最旺）；1 月偏淡（只有一年数据）</td><td>退租 2 月最旺，7、3 月次之；招聘 1–3 月、9–11 月；短租退房 1、3、11 月；家政 10–12 月〔说〕</td><td>退租：错开。招聘：基本不相关。家政〔说〕10–12 月：撞。短租：只有 11 月重合<span class="badge mid">中</span><span class="badge low">家政按月：低</span></td></tr>
+      <tr><th scope="row">一周</th><td>周五周六 21 点到凌晨 3 点最好〔高〕；周五周六 18–21 点、周六周日凌晨 3–6 点次之；周末白天再次；工作日白天最差〔中〕</td><td>家政、短租退房：工作日白天。办公室：工作日 18–22 点。医院：7 天排班</td><td>白天的清洁不撞（有 Black 车的话，白天机场来回会撞）<span class="badge mid">中</span>；办公室晚班、早班和周末白天会撞<span class="badge low">低到中</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>一年里：每个月谁旺</h3>
+  <div class="tbl"><table class="heat" id="heat-m"><caption>按天算，100 = 全年平均的一天</caption></table></div>
+  <p class="hint">青色 = 清洁，橙色 = Uber；加粗加框 ≥110，浅底 104–109，灰字 ≤94。</p>
+  <div class="plan" id="plan"></div>
+  <p class="hint">月份卡片：青底 = 清洁旺（任何一类 ≥110），橙框 = Uber 旺（市区或机场 ≥104），两样都有 = 撞。9、10 月的「清洁旺」只靠招聘广告一列（单月误差约 ±7）。</p>
+  <ul>
+    <li>退租清洁跟 Uber 错开：2 月退租最旺时 Uber 平平，12 月 Uber 最旺时退租偏淡。</li>
+    <li>招清洁工的广告有两个高峰：1–3 月和 9–11 月（差距在误差内），12 月最少（2006–25 年 20 年里 13 年最低）：12 月 Uber 最旺时几乎没人招清洁工。</li>
+    <li>短租退房跟机场一起旺：3 月、1 月、11 月最多，5 月最少，跟 Uber 的旺月只在 11 月重合。日常家政跟 Uber 一起旺（10–12 月），但家政只有公司说法〔说〕。</li>
+    <li>10–12 月最挤（家政、Uber、机场一起旺，11 月短租也多）：先保住自己的固定客户，其次才是多开。2–3 月是清洁的月份；5–8 月两边都淡（7 月退租近两年冒高是例外）。</li>
+  </ul>
+  <p class="hint">来源：退租 RTBA 退押金（比实际搬出晚几天到几周，拿它近似清洁日期〔估〕）〔硬〕；招聘 JSA 招聘广告指数，维州清洁工 2007–25（不含 2020–21），单月从 3 个月平均倒推，误差约 ±7〔硬/估〕；短租 Inside Airbnb 评论数 2023–25〔硬/估〕；家政 Simply Maid 一家公司的预约，79% 在悉尼〔说〕；市区网约车（含出租车）：Safe Transport Victoria 2022-23 一年〔硬〕；机场旅客数 BITRE〔硬〕。</p>
+
+  <h3>一周里：开 UberX 每小时大约净挣多少</h3>
+  <div class="tbl"><table class="wk" id="heat-w"><caption>澳元/小时，扣抽成、GST 和车辆成本（约 $8.5/h），未扣个税</caption></table></div>
+  <p class="hint">深橙 ≥ $26（接近 award 清洁的 $28–34），浅橙 $18–25，灰字 ≤ $13。✈&#xFE0E; = 送客去机场的好时段（一趟来回再占 2–3 小时）。青框 = 家政、短租退房最常见的时段（框的是周一到周五 9–15 点；实际约 8:30–16:00）。0–3 点那格是前一天深夜。</p>
+  <div class="tbl"><table>
+    <caption>清洁活一般在什么时候</caption>
+    <thead><tr><th>清洁活</th><th>一般什么时候</th><th>三个 Uber 好时段都不占</th><th class="nw">把握</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">家政</th><td>周一到周五 8:30–14:00（中位数）；华人团队 7–7:30 接人，常加周六</td><td>82%</td><td>中</td></tr>
+      <tr><th scope="row">短租退房</th><td>10:00–16:00，一半写了周末</td><td>16 条全不占</td><td>中</td></tr>
+      <tr><th scope="row">退租清洁</th><td>只有 3 条写了时段：2 条白天、1 条周末</td><td>3 条全不占</td><td>低</td></tr>
+      <tr><th scope="row">酒店客房</th><td>7 天排班，多有周末，也有晚班</td><td>73%</td><td>低</td></tr>
+      <tr><th scope="row">办公室、商业</th><td>周一到周五 18:00–22:00；也有清晨 6 点的班</td><td>21%</td><td>低</td></tr>
+      <tr><th scope="row">医院、养老、学校</th><td>7 天排班：6:30–14:30、14:30–22:30、20:30–00:30</td><td>52%</td><td>低</td></tr>
+    </tbody>
+  </table></div>
+  <p class="hint">三个 Uber 好时段：周五周六 20 点到凌晨 3 点、清晨 4–8 点（送机）、16–21 点（接机）。491 条墨尔本清洁招聘广告（主流招聘网站 265 条、华人网站 226 条，大多 2026 年 10–11 月），210 条写了时段〔估〕；57% 没写时段，广告不等于实际上班时间。</p>
+  <ul>
+    <li>周一到周四白天（6–18 点）做清洁：UberX 这时每小时只剩约 $10–14，是一周最差的一档。</li>
+    <li>周五周六 21 点到凌晨 3 点开 Uber（约 $26–31，跟 award 清洁差不多或略低），这时清洁活很少。</li>
+    <li>没有 Black 车时，清晨 4:30–7 点适合顺路接机场单，跟办公室、医院的早班撞，二选一；家政团队 7 点以后才接人。</li>
+    <li>周末白天有清洁活就做清洁：award 周六 $47.39、周日 $60.93，UberX 只有约 $16–19。</li>
+    <li>办公室晚班（18–22 点）占的是傍晚接机高峰；award 晚班 $37.91，比同时段 UberX 高（周一到周四约 $14–17，周五 $22–26）。</li>
+    <li>有 Black 车：机场来回的好时段在清晨到中午、下午到傍晚（工作日和周日 14:30–15:30 送机，接 18–19 点到港），跟白天清洁撞。按「一年怎么分配」那一节：10–12 月白天也跑机场，2–3 月白天做清洁。</li>
+    <li>真正卡人的是睡觉：周五开到凌晨 3 点，周六 7–8 点华人团队就开工。周五夜开车，周六别排早班。</li>
+  </ul>
+  <p class="hint">依据：悉尼 Uber 2017-18 年司机收入研究（周末夜 ×1.67、周末白天 ×1.28、工作日夜 ×1.10）〔硬〕；同一类时段里各钟点按墨尔本 2014-15 年出租车载客率的一半来分〔估〕；换算成钱按 Uber 全时段平均扣抽成后约 $27/h，再扣 GST 和每小时约 $8.5 的车辆成本〔估〕，这样算全时段平均约 $16.6、周五周六夜约 $26.9，跟之前算的 Uber 净时薪（$16.6–17.3、$26.7–26.9）对得上；表里 56 格简单平均约 $15.8，比 $16.6 低，因为真实司机在周末和晚上开得更多。周五周六夜最好〔高〕；工作日白天最差〔中〕；每格金额〔低到中〕；周五周六夜里哪 3 小时最好〔低〕。机场按一周的航班表：周六周日用的是上周末，周一周二没测、用周三周四；把握低到中〔估〕。</p>
+  <details>
+    <summary>award 清洁按时段的时薪</summary>
+    <div class="cw short"><canvas id="c-week" role="img" aria-label="award 清洁时薪：公众假期 74.47，周日 60.93，周六 47.39，跨夜班 41.97，早 6 点前或晚 6 点后 37.91，工作日白天 33.85 澳元。"></canvas></div>
+    <p class="hint">周末和加成班岗位很少，每周最多约 10 小时。</p>
+  </details>
 </section>
 
 <section class="card">
@@ -244,7 +322,7 @@ footer p { margin: 0; }
   <ul>
     <li>有了 Black 车，Uber 该占大头：车钱是固定的（Splend 还锁 52 周），多开的每一小时值扣车钱之前的 $37–47，比 award 清洁的 $31 高。淡季少开，是因为机场单少〔估〕。</li>
     <li>要不要弄 Black 车，看你每周能开多少小时：摊上车的固定成本后，Lexus ES 要每周开约 38 小时、自己的 GLC 约 44 小时，每小时才追得上 award 清洁；算上有车后清洁每周多挣的约 $160，门槛降到约 26 小时和 19 小时。Lexus ES 跑 Black 比 Corolla 跑 UberX 多挣，只要每周约 12 小时机场来回。</li>
-    <li>季节正好错开：机场 10–12 月明显旺（按天 104–107），9 月和 1 月略高（约 103）；退租清洁 2、3、7 月旺（107–126）。</li>
+    <li>季节：退租清洁 2、3、7 月旺（107–126）；2、3 月机场偏淡，跟机场错开（7 月机场 102，不算错开）；但日常家政〔说〕10–12 月也旺，10–12 月最挤（见<a href="#peaks">高峰期</a>）。</li>
     <li>清洁里最值钱的留着：自己的客户（$33–42）、NDIS（$38–50）、旺季退租（$30–35）；最先让出去的是 award 打工的清洁。</li>
     <li>清洁有 Uber 给不了的：super、工伤保险；而且 Uber 可能关掉你的机场接单权限。</li>
   </ul>
@@ -258,20 +336,6 @@ footer p { margin: 0; }
   <div class="cw tall"><canvas id="c-rate" role="img" aria-label="各种工作的每小时净收入范围，按中位数从高到低：大活动散场开 Uber 34 到 55 澳元最高，NDIS 残障家政 38 到 50 澳元次之，Uber Eats 电单车 12 到 18.5 澳元最低。Black 机场来回 28 到 36 澳元，UberX 机场来回 25 到 35 澳元。清洁为青色，Uber 为琥珀色。"></canvas></div>
   <p class="hint">award 清洁另加 12% super，有工伤保险；华人圈现金工和 Airtasker 都没有。</p>
   <p class="hint">Uber 数字已扣抽成、油费、保险和 GST，多数靠模型。UberX 机场那行没扣车租；Black 那行已经摊上车的固定成本。</p>
-</section>
-
-<section class="card">
-  <h2>全年月历（按天调整的指数，100 = 平均）</h2>
-  <div class="cw"><canvas id="c-season" role="img" aria-label="全年 12 个月的需求指数折线图：退租清洁 2 月最高 126，网约车 12 月最高 108，机场客流（按天）12 月最高 107、5 月最低 91，100 为平均。"></canvas></div>
-  <div class="plan" id="plan"></div>
-  <p class="hint">退租：RTBA 退押金数，4 个财年平均〔硬〕，比实际搬出晚几天到几周。网约车：Safe Transport Victoria 2022-23 一年，含出租车〔硬〕。机场：BITRE 四年平均，按天折算〔硬/估〕。</p>
-</section>
-
-<section class="card">
-  <h2>一周里什么时候做</h2>
-  <div class="cw short"><canvas id="c-week" role="img" aria-label="award 清洁时薪：公众假期 74.47，周日 60.93，周六 47.39，跨夜班 41.97，早 6 点前或晚 6 点后 37.91，工作日白天 33.85 澳元。"></canvas></div>
-  <p class="hint">周末和加成班岗位很少，每周最多约 10 小时。</p>
-  <p>Uber 最好的时段：周五、周六 20:00–03:00。悉尼 Uber 数据显示，周末夜每小时毛收入是工作日白天的 1.67 倍〔硬〕。工作日白天开 Uber（~$17/h）、没车送外卖（~$15/h）不建议。</p>
 </section>
 
 <section class="card">
@@ -295,7 +359,7 @@ footer p { margin: 0; }
     <li>来回都载客：去程、回程都是长单。UberX 一趟来回司机实拿约 $75（扣油钱后约 $66），Black 约 $124（扣油钱后约 $112）。</li>
     <li>一天最多 1–2 趟靠目的地功能（每天 2 次），其余靠清晨顺路单、挑去机场的单和预约单。</li>
     <li>等候场是露天车位，没有 Wi-Fi 和休息室，只能在自己车里干；被叫到要马上走，适合学习和不用实时回复的活。附近厕所：二级等候场走到 T4 约 150 米、BP 加油站约 300 米。</li>
-    <li>假设：UberX 每公里 15c，Black 20c；车租没算。排队时间没有 2025–26 年的官方数据。</li>
+    <li>假设：UberX 每公里 15c，Black 20c；车租没算。排队时间没有 2025–26 年的官方数据。市区开 UberX 这格（$23/h，勾选 GST 后 $20.9）只扣了抽成和油费，没扣车的其他成本，不能直接和「高峰期」那节的净值比（那里已扣 GST 和约 $8.5/h 的车辆成本）。</li>
   </ul>
 </section>
 
@@ -307,7 +371,7 @@ footer p { margin: 0; }
 
 <footer>
   <p>把握：高 = 至少 2 个独立的硬数据来源，或跨 5 年以上的硬数据，方向一致；中 = 只有 1 个硬数据来源或一年数据，或主要靠模型但能和独立数据对上；低 = 主要靠假设或个别案例。</p>
-  <p>数据来源：RTBA、Safe Transport Victoria、ABS、BITRE、Fair Work award 工资表、ATO、Uber 和墨尔本机场官网、Uber 澳洲税务汇总说明、Karmo / Splend 挂牌价、Finder、招聘广告样本、一位司机的税务汇总截图。仅供参考，不是财务或税务建议。</p>
+  <p>数据来源：RTBA、Safe Transport Victoria、ABS、BITRE、Fair Work award 工资表、ATO、Uber 和墨尔本机场官网、Uber 澳洲税务汇总说明、Karmo / Splend 挂牌价、Finder、招聘广告样本、JSA 招聘广告指数、Inside Airbnb、Simply Maid、悉尼 Uber 研究（Alexander 等 2022）、ESC 出租车数据、维州出行调查 VISTA、avionio 航班表、一位司机的税务汇总截图。仅供参考，不是财务或税务建议。</p>
 </footer>
 </div>
 
@@ -481,36 +545,77 @@ footer p { margin: 0; }
     }
   });
 
-  // 月历
-  var base = { pointRadius: 2, tension: 0 };
-  mk("c-season", {
-    type: "line",
-    data: {
-      labels: months,
-      datasets: [
-        Object.assign({ label: "退租清洁", data: [100,126,107,89,95,97,117,100,90,94,93,93], borderColor: teal, backgroundColor: teal, borderWidth: 2.5 }, base),
-        Object.assign({ label: "网约车", data: [90,99,103,101,100,102,96,94,101,104,102,108], borderColor: amber, backgroundColor: amber, borderWidth: 2.5 }, base),
-        Object.assign({ label: "机场客流（按天）", data: [103,97,96,100,91,94,102,97,102,104,105,107], borderColor: muted, backgroundColor: muted, borderWidth: 1.5, borderDash: [5, 4] }, base)
-      ]
-    },
-    options: {
-      interaction: { mode: "index", intersect: false },
-      plugins: { legend: { labels: { color: fg, boxWidth: 14 } } },
-      scales: {
-        x: { grid: { display: false }, ticks: { color: muted, maxRotation: 0, font: { size: narrow ? 10 : 12 } } },
-        y: { min: 80, max: 130, grid: { color: function (c) { return c.tick.value === 100 ? muted : line; } }, ticks: tick }
-      }
-    }
+  // 一年里谁旺：[列名, 按天指数 1–12 月, 是否 Uber]（r10）
+  var heat = [
+    ["退租", [100,126,107,89,95,97,117,100,90,94,93,93], 0],
+    ["招聘", [101,110,114,90,93,99,93,96,110,111,104,79], 0],
+    ["短租", [115,106,116,105,83,88,94,86,89,102,112,106], 0],
+    ["家政〔说〕", [87,100,98,93,98,95,89,99,101,108,122,112], 0],
+    ["市区", [90,99,103,101,100,102,96,94,101,104,102,108], 1],
+    ["机场", [103,97,96,100,91,94,102,97,102,104,105,107], 1]
+  ];
+  // 单元格档位：≥110 加粗加框，≥104 浅色，≤94 灰字；isU 为 1 用橙色（Uber）
+  var level = function (v, isU) { return v >= 110 ? (isU ? "u3" : "c3") : v >= 104 ? (isU ? "u2" : "c2") : v <= 94 ? "lo" : ""; };
+  document.getElementById("heat-m").insertAdjacentHTML("beforeend",
+    "<thead><tr><th rowspan=\"2\">月</th><th colspan=\"4\">清洁</th><th colspan=\"2\">Uber</th></tr><tr>" +
+    heat.map(function (h) { return "<th>" + h[0] + "</th>"; }).join("") + "</tr></thead><tbody>" +
+    months.map(function (mo, i) {
+      return "<tr><th scope=\"row\">" + mo + "</th>" + heat.map(function (h) {
+        var c = level(h[1][i], h[2]);
+        return "<td" + (c ? " class=\"" + c + "\"" : "") + ">" + h[1][i] + "</td>";
+      }).join("") + "</tr>";
+    }).join("") + "</tbody>");
+
+  // 月份卡片：清洁旺 = 四类清洁任一 ≥110（hot），Uber 旺 = 市区或机场 ≥104（hotu），两样都有 = 撞
+  var peak = function (isU, i) {
+    return Math.max.apply(null, heat.filter(function (h) { return h[2] === isU; }).map(function (h) { return h[1][i]; }));
+  };
+  var busy = months.map(function (_, i) {
+    var c = peak(0, i) >= 110, u = peak(1, i) >= 104;
+    return c && u ? "both" : c ? "clean" : u ? "uber" : "";
   });
+  var busyCls = { clean: "hot", uber: "hotu", both: "hot hotu" };
+  console.assert(JSON.stringify(busy) === JSON.stringify(["clean", "clean", "clean", "", "", "", "clean", "", "clean", "both", "both", "both"]), "busy labels check failed: " + busy.join());
+  console.assert(months.filter(function (_, i) { return peak(1, i) >= 104; }).join() === "10月,11月,12月", "Uber 旺月份 check failed");
   var plan = [
-    "机场旺（103），Uber 机场来回为主；市区网约车最淡", "<b>退租最旺（126），清洁为主</b>", "退租还旺（107），清洁、Uber 各半", "两边都淡，少干点；F1 那周开 Uber",
-    "机场最淡（91），适合休息", "两边都淡", "退租次旺（117，近两年冒高，原因不明），学校假期机场也旺，两边都做", "两边都淡",
-    "机场转旺，AFL 决赛圈，Uber 为主", "机场旺，春季赛马，Uber 为主", "机场旺，Uber 为主", "<b>机场、网约车都最旺，Uber 为主</b>"
+    "短租退房多（115）；市区 Uber 偏淡，机场略旺",
+    "<b>退租最旺（126）</b>，招清洁工的广告也多：清洁为主",
+    "招聘、短租多，退租还旺（107）：清洁为主",
+    "两边都一般；F1 那周开 Uber",
+    "都淡（短租、机场全年最淡）：适合休息",
+    "都淡",
+    "退租冒高（117，近两年）；机场学校假期略旺",
+    "都淡",
+    "招清洁工的第二个高峰；机场略旺",
+    "招聘、家政〔说〕旺，Uber、机场也旺：开始撞",
+    "<b>家政最旺〔说〕、短租多，机场旺：撞</b>",
+    "<b>Uber、机场最旺</b>；家政也旺〔说〕，招聘停"
   ];
   document.getElementById("plan").innerHTML = plan.map(function (t, i) {
-    var cls = i === 1 ? ' class="hot"' : i === 11 ? ' class="hotu"' : "";
-    return "<div" + cls + "><b class=\"m\">" + (i + 1) + " 月</b>" + t + "</div>";
+    var cls = busyCls[busy[i]];
+    return "<div" + (cls ? " class=\"" + cls + "\"" : "") + "><b class=\"m\">" + (i + 1) + " 月</b>" + t + "</div>";
   }).join("");
+
+  // 一周里：开 UberX 每小时净挣多少（澳元，扣抽成、GST 和车辆成本，r10）；行 = 周一…周日，列 = 0–3 … 21–24 点
+  var weekNet = [[15,14,12,12,10,11,14,16],[13,11,12,12,11,12,15,16],[12,11,12,13,11,14,16,16],[14,11,12,13,12,14,16,17],[15,12,11,13,13,15,22,26],[27,21,16,18,19,18,24,27],[31,25,18,18,19,18,16,17]];
+  var weekAir = [[2,3,5],[2,3,5],[2,3,5],[2,3,5],[2,3,5],[1,2,3],[2,3,4,5]]; // 送机好时段（列号）
+  var cleanBlocks = [3, 4]; // 周一到周五 9–15 点：家政、短租退房最常见
+  var dayNames = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+  var wkBlock = function (j) { return j * 3 + "–" + (j * 3 + 3); };
+  document.getElementById("heat-w").insertAdjacentHTML("beforeend",
+    "<thead><tr><td></td>" + weekNet[0].map(function (_, j) { return "<th>" + (narrow ? j * 3 : wkBlock(j)) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+    weekNet.map(function (row, d) {
+      return "<tr><th scope=\"row\">" + dayNames[d] + "</th>" + row.map(function (v, j) {
+        var fly = weekAir[d].indexOf(j) >= 0;
+        var cls = [v >= 26 ? "u3" : v >= 18 ? "u2" : v <= 13 ? "lo" : "", d < 5 && cleanBlocks.indexOf(j) >= 0 ? "cl" : ""].filter(Boolean).join(" ");
+        var tip = dayNames[d] + " " + wkBlock(j) + " 点：约 $" + v + "/h" + (fly ? "；送机好时段" : "");
+        return "<td" + (cls ? " class=\"" + cls + "\"" : "") + " title=\"" + tip + "\">" + v + (fly ? "<span class=\"air\">✈︎</span>" : "") + "</td>";
+      }).join("") + "</tr>";
+    }).join("") + "</tbody>");
+  var wkAll = [].concat.apply([], weekNet);
+  console.assert(Math.max.apply(null, wkAll) === 31 && weekNet[6][0] === 31 && Math.min.apply(null, wkAll) === 10, "weekNet max/min check failed");
+  console.assert(weekNet.slice(0, 4).every(function (r) { return r.slice(2, 6).every(function (v) { return v <= 14; }); }), "weekNet 工作日白天 check failed");
+  console.assert(weekNet[4][7] >= 26 && weekNet[5][7] >= 26, "weekNet 周五周六 21–24 点 check failed");
 
   // 一周
   var week = [["公众假期", 74.47], ["周日", 60.93], ["周六", 47.39], ["跨夜班", 41.97], ["早 6 点前/晚 6 点后", 37.91], ["工作日白天", 33.85]];
