@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="robots" content="noindex" />
-<title>清洁还是开 Uber</title>
+<title>清洁 + Uber 怎么搭配</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" />
@@ -57,11 +57,24 @@ a { color: var(--accent); }
 .ctl .chk { display: flex; align-items: center; gap: 8px; }
 .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 @media (min-width: 640px) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.hint + .tiles { margin-top: 10px; }
 .tile { border: 1px solid var(--line); border-radius: 8px; padding: 10px; font-size: .82rem; }
 .tile .v { display: block; font-family: var(--font-num); font-size: 1.3rem; margin-top: 2px; }
+.tiles.kpi .v { font-size: 1.1rem; }
 .tile.best { border: 2px solid var(--accent); background: var(--accent-soft); }
-ul { margin: 8px 0 0; padding-left: 1.2em; }
+ul, ol { margin: 8px 0 0; padding-left: 1.2em; }
+ol { padding-left: 1.7em; }
 li { margin: 4px 0; }
+.tbl { overflow-x: auto; margin-top: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 500; }
+th:first-child, td:first-child { min-width: 5.2em; }
+@media (max-width: 420px) { th, td { padding: 6px; } }
+caption { text-align: left; font-weight: 700; padding: 0 0 6px; }
+details { border-top: 1px solid var(--line); padding: 6px 0; }
+h2 + details { border-top: 0; }
+summary { font-weight: 700; cursor: pointer; padding: 4px 0; }
 footer { color: var(--muted); font-size: .8rem; display: grid; gap: 6px; }
 footer p { margin: 0; }
 </style>
@@ -69,33 +82,189 @@ footer p { margin: 0; }
 <body>
 <div class="wrap">
 <header>
-  <h1>墨尔本：做清洁还是开 Uber？</h1>
-  <p class="sub">什么时候做、做哪种最划算 · 调研截至 2026-11-12 · 税前 · 澳元</p>
+  <h1>墨尔本：清洁 + Uber 怎么搭配</h1>
+  <p class="sub">什么时候做、怎么分配、怎么跑最划算 · 调研截至 2026-11-13 · 税前 · 澳元</p>
   <p class="sub"><a href="/">← 回职位地图</a></p>
 </header>
 
 <section class="card concl" aria-label="结论">
   <h2>结论</h2>
+  <div class="item">清洁和 Uber 一起做，比例看车和季节。有 Black 车、机场 Black 单够的话，Uber 占 50–75%：10–12 月机场明显旺（9 月、1 月略高），多开；2、3、7 月退租旺，多做清洁。没有 Black 车，Uber 只开周五周六夜和清晨机场来回，清洁占 70–80%。<span class="badge low">低</span></div>
   <div class="item">按 award 发工资的清洁（算上通勤 $28–34/h，另加 12% super），约是 Uber 平均（~$17/h）的 1.6–2 倍。<span class="badge">高</span></div>
-  <div class="item">周五、周六晚上开 Uber（约 $26–28/h），和合规清洁基本打平；算上 super，清洁略胜。<span class="badge mid">中</span></div>
-  <div class="item">退租清洁 2 月最旺（按天指数 126）；网约车 12 月最旺（108）、1 月最淡（90）。开 Uber 挑时段比挑月份重要：周末夜约是平均的 1.6 倍，各月只差 ±10%。<span class="badge mid">中</span><span class="badge">2 月最旺：高</span></div>
-  <div class="item">没车：每周开 10–25 小时 Uber，买 2019 Corolla Hybrid 比租车每周多挣 $27–93；开 40 小时两者相差不到 $17。车同时用来做清洁和开 Uber 才明显划算（每周约 +$249）。<span class="badge mid">中</span></div>
-  <div class="item">租豪车跑 Uber Black 大概率不划算：Black 单要占 36–52%，才追得上租 Corolla 跑 UberX；还要锁 52 周、约 $31,000。<span class="badge mid">中</span></div>
-  <div class="item">空车专程去机场排队不划算（$8–17/h，市区约 $23）。载客去机场、排队时用电脑干活，约 $25–35/h（开车部分扣 GST，未扣车租），一天 1–2 趟；清晨 4–8 点约 20% 的单去机场，最容易顺路拿到。<span class="badge mid">中</span></div>
+  <div class="item">Black 机场来回、来回都载客，能做出很高的流水。一位开奔驰 GLC 一类 SUV 的司机〔说〕10 月流水 $22,390〔硬〕；排除法推出他大部分时间在跑 Black 机场来回，倒推约 233 单、每周 50–65 小时，到手约 $8,000–10,800（未扣个税）〔估〕。<span class="badge low">低</span></div>
+  <div class="item">流水不等于到手：Black 机场到市区乘客付 $97，司机实拿约 $61；市区到机场乘客付 $95，司机实拿约 $63；再扣 GST 和车的成本。<span class="badge mid">中</span></div>
+  <div class="item">季节：退租清洁 2 月最旺（按天 126）；机场 12 月最旺（按天 107），5 月最淡；网约车 12 月最旺、1 月最淡。<span class="badge mid">中</span><span class="badge">2 月最旺：高</span></div>
+  <div class="item">没车：每周开 10–25 小时 UberX，买 2019 Corolla Hybrid 比租车每周多挣 $27–93；车同时用来做清洁和开 Uber 才明显划算（每周约 +$249）。<span class="badge mid">中</span></div>
+  <div class="item">租豪车混在市区普通单里跑 Black 不划算（Black 单要占 36–52%）。墨尔本没找到能跑 Uber 的 GLC 出租；能租来跑 Black 的只有 Splend 的 Lexus ES、奔驰 EQB、Cadillac Lyriq，都要锁 52 周。<span class="badge mid">中</span></div>
+</section>
+
+<section class="card">
+  <h2>科普：Uber 档位、钱怎么分、机场怎么接单</h2>
+  <details open>
+    <summary>Uber 在墨尔本有哪几档</summary>
+    <div class="tbl"><table>
+      <thead><tr><th>档位</th><th>是什么</th><th>车</th><th>司机门槛</th><th>车费（和 UberX 比）</th></tr></thead>
+      <tbody>
+        <tr><td>UberX</td><td>普通档</td><td>能注册成网约车的普通车</td><td>司机资质 + 车辆注册</td><td>基准；机场到市区平均 $68</td></tr>
+        <tr><td>Comfort</td><td>车新一点、空间大</td><td>7 年内、在名单上，如凯美瑞混动、特斯拉 Model 3/Y、奔驰 C 级</td><td>20 单、评分 ≥4.85、取消率 ≤15%</td><td>约 1.13–1.2 倍</td></tr>
+        <tr><td>Black（以前叫 Premier）</td><td>豪华车</td><td>7 年内、在 Black 名单上（见下一条）</td><td>同上，再做完 Black 培训</td><td>约 1.4–1.7 倍；机场到市区平均 $97</td></tr>
+        <tr><td>Business Black</td><td>公司账户叫的 Black</td><td>另有一份车型名单，GLC 在不在没查到</td><td>100 单、评分 ≥4.90</td><td>同 Black</td></tr>
+        <tr><td>XL</td><td>6–7 座</td><td>7 座车</td><td>—</td><td>机场到市区平均 $94</td></tr>
+      </tbody>
+    </table></div>
+    <p class="hint">Black 车开着 UberX 时也会收到 UberX 和 Comfort 的单〔硬〕；能不能只接 Black 单，美国可以，澳洲没确认〔说〕。</p>
+    <p class="hint">Uber One 会员有时会被免费升级（UberX 升 Comfort、Comfort 升 Black），升级单司机按哪档拿钱没公布。</p>
+  </details>
+  <details>
+    <summary>哪些车能跑 Black</summary>
+    <p>Uber 墨尔本官网举的例子〔硬〕：奔驰 GLC、EQB、EQE，宝马 i5，雷克萨斯 ES、NX、RX。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>品牌</th><th>能跑 Black</th><th>只能跑 Comfort</th></tr></thead>
+      <tbody>
+        <tr><td>奔驰</td><td>E 级、S 级、CLS、GLC、GLE、GLS、G 级、EQB、EQC、EQE、EQS</td><td>C 级、CLA、GLA、GLB、EQA、V 级</td></tr>
+        <tr><td>宝马</td><td>5、6、7、8 系，X3–X7，i5、iX、iX3</td><td>3、4 系，i4，X1</td></tr>
+        <tr><td>奥迪</td><td>A6–A8，Q5–Q8，e-tron</td><td>—</td></tr>
+        <tr><td>雷克萨斯</td><td>ES、GS、LS、LX、NX、RX、RZ</td><td>—</td></tr>
+        <tr><td>其他</td><td>沃尔沃 S90、XC60、XC90；捷尼赛思 G80、G90、GV70、GV80；特斯拉 Model S、X</td><td>特斯拉 Model 3、Y；凯美瑞、RAV4 混动等</td></tr>
+      </tbody>
+    </table></div>
+    <p class="hint">名单来自 Finder（2026 年 10 月）〔说〕。车龄要在 7 年内：2026 年是 2019 年或更新〔硬〕；2027 年大概是 2020 年或更新〔估〕。Uber 澳洲页面没写颜色和内饰要求〔硬〕；「全黑」是租车公司的说法〔说〕，买车前先在 app 里确认。</p>
+  </details>
+  <details>
+    <summary>乘客付的钱怎么分（Black，机场到市区 $97）</summary>
+    <div class="cw tall"><canvas id="c-fall" role="img" aria-label="乘客付 97 澳元的钱怎么分，从上到下：乘客付 97；扣州政府附加费 1.25、过路费 5、预订费 2、机场接客费 4.82、Uber 服务费约 23.08，司机实拿 60.85；再扣 GST 5.53、这一单的油电和保养约 7.52，剩下 47.80。"></canvas></div>
+    <p class="hint">剩下的还要付车的固定成本（折旧或租金、保险、注册）和个税；而且前面还要排队。抽成比例 27.5% 没核实〔估〕。「这一单的油电和保养」电车约 $3、汽油 GLC 约 $12，图里取中间值；剩下约 $43–52。</p>
+  </details>
+  <details>
+    <summary>怎么看 Uber 的税务汇总</summary>
+    <ul>
+      <li>车费收入：乘客付的车费，还没扣 Uber 服务费〔硬〕。机场费、过路费、政府附加费、预订费，Uber 说也是乘客付给你的，所以大概也算在里面〔估，官方页面没解释这个标题〕。</li>
+      <li>其他收入：奖励、Boost、一次性付款〔硬〕。合计（Total Income）= 上面几项相加。</li>
+      <li>汇总里还有载客公里数、完成单数和小费〔硬，截图上的说明〕，以及 Uber 扣的服务费和代收的费用。</li>
+      <li>别人说「月入 2 万」，先分清是流水还是到手。跑 Black 机场线，扣完车的全部成本、未扣个税，到手大约是流水的 32–48%〔估〕。</li>
+      <li>开网约车从第一块钱就要注册 GST，每季度报一次〔硬〕。要交的大约是实拿的 1/11，再减去车的成本里含的 GST。</li>
+    </ul>
+  </details>
+  <details>
+    <summary>墨尔本机场怎么接单</summary>
+    <ol>
+      <li>送客：2026 年 10 月 6 日起在 T123 交通枢纽 3 楼，免费〔硬〕。</li>
+      <li>接客要排队：先到 Francis Briggs Rd 主等候场进虚拟队，再到 Centre Rd 二级等候场等；被叫到后开 2–5 分钟到航站楼。</li>
+      <li>UberX 在 Zone B 用 PIN 配对，司机挑不了目的地；Black、Comfort、XL 在 Zone A〔硬〕。Black 要不要走 VHA 停车场，Uber 自己的资料前后矛盾，以 app 为准。</li>
+      <li>机场接客费 $4.82，乘客付〔硬〕。</li>
+      <li>必须一直在线、待在等候场范围里，下线或离开就掉出队伍〔硬〕。</li>
+      <li>优先回队：排了 15 分钟以上却接到短单，6 小时内回来直接排到最前面〔硬〕。</li>
+      <li>预约接机：UberX 不能接，Comfort 和 Black 能接；最多提前 7 天能看到；Black 乘客有 60 分钟等候时间，迟取消司机拿 $70〔硬〕。</li>
+      <li>没有 Rematch（送完客原地接下一单）〔说〕。</li>
+      <li>目的地功能每天 2 次〔硬〕。设成机场就能接往机场方向的单，澳洲没有页面禁止〔估〕。</li>
+      <li>等候场是露天车位，没找到休息室和 Wi-Fi 的资料。从 Centre Rd 二级等候场走 150–300 米有厕所；Francis Briggs Rd 主等候场 1.2 公里内没有公厕，旁边的 bp pulse 充电站有厕所，但只能充电时用〔说〕。</li>
+      <li>机场旺月（按天算）：12 月最旺，其次 11、10、1 月；5 月最淡。周五下午、周日晚上最忙〔说〕；长周末前的周五最忙之一〔硬〕。</li>
+    </ol>
+  </details>
+  <details>
+    <summary>从零开始跑 Black，要做哪些事</summary>
+    <ol>
+      <li>申请 ABN，注册 GST。</li>
+      <li>申请司机资质（Safe Transport Victoria）：至少 20 个工作日，$76.30。</li>
+      <li>车辆注册成商用载客车 $55.10，之后每年年检；保险要允许跑网约车。</li>
+      <li>在 Uber 上传资料，先跑 UberX 或 Comfort。</li>
+      <li>跑满 20 单、评分 ≥4.85、取消率 ≤15%，做完 Black 培训，就能开 Black。</li>
+      <li>做到 100 单、评分 4.90，可以申请 Business Black（另有车型名单）。</li>
+    </ol>
+    <p class="hint">全程约 5–7 周〔估〕。</p>
+  </details>
+</section>
+
+<section class="card">
+  <h2>案例：月流水 2 万多的奔驰机场司机</h2>
+  <p class="hint">流水来自一位在跑司机的 Uber 税务汇总截图〔硬〕；车型、跑机场线、跑 Black 是转述的〔说〕；其余全部是倒推〔估〕。</p>
+  <div class="tiles kpi">
+    <div class="tile">10 月流水<span class="v">$22,390</span></div>
+    <div class="tile">倒推单数<span class="v">约 233 单</span></div>
+    <div class="tile">每周工时<span class="v">约 50–65 小时</span></div>
+    <div class="tile">到手（未扣个税）<span class="v">约 $8,000–10,800</span></div>
+  </div>
+  <div class="cw"><canvas id="c-elim" role="img" aria-label="要跑出 10 月流水 22,390 澳元，每周得干的小时数：UberX 市区平均 117，UberX 天天都是周五周六夜的水平 85，Black 市区普通单 106，UberX 机场来回 84，Black 机场来回每趟等 50 分钟 64、等 30 分钟 55。虚线是一周 70 小时，只有两种 Black 机场来回在线内。"></canvas></div>
+  <p class="hint">每小时流水（乘客付）：UberX 市区 ~$43，周五周六夜 ~$59，Black 市区 ~$48（没有数据，按假设），UberX 机场来回 ~$60，Black 机场来回 ~$79–92。只有 Black 机场来回能在一周 70 小时内跑出这个数。</p>
+  <div class="tbl"><table>
+    <caption>到手（含其他收入；扣 Uber 服务费、GST、车的全部成本和杂费 $200/月；未扣个税）</caption>
+    <thead><tr><th>车</th><th>9 月</th><th>10 月</th></tr></thead>
+    <tbody>
+      <tr><td>自己的电动 EQC 或 GLC</td><td>$5,900–7,600</td><td>$8,700–10,800</td></tr>
+      <tr><td>自己的汽油 GLC 200</td><td>$5,400–7,000</td><td>$8,000–10,000</td></tr>
+      <tr><td>Splend 先租后买的 EQB 电车</td><td>$6,300–7,100</td><td>$9,700–10,500</td></tr>
+    </tbody>
+  </table></div>
+  <details>
+    <summary>为什么能做到</summary>
+    <ul>
+      <li>每单值钱：Black 机场单司机每单实拿约 $61–63，市区 UberX 一单（8 公里左右）约 $17。</li>
+      <li>来回都有客：有一程空跑，时薪会少约一半。</li>
+      <li>大部分是 Black 单（排除法推的）：混在市区跑要 36–52% 的单是 Black 才划算，只跑机场的话 Black 单占比能高得多。</li>
+      <li>每趟排队加等单要压得短：117 趟来回塞进每周 50–65 小时，按每单 $96 算每趟只有约 20–55 分钟；每单平均 $110 的话是 36–75 分钟，和论坛上说的 UberX 排队差不多。所以 Black 是不是真比 UberX 排得短，推不出来。</li>
+      <li>工时长：每周约 50–65 小时。</li>
+      <li>电车每月最多多 $700–800：每公里电费约是汽油的三分之一；但保险可能更贵，而且要能在家充电（每周约 390–440 度电，全靠快充每周要多花 6–8 小时）。</li>
+      <li>他大概率开的是自己的车：墨尔本没找到能跑 Uber 的 GLC 出租；他每周约 1,800 公里，租车还要付不少超里程费。</li>
+      <li>前提是推断：几乎全是 Black 机场来回、来回都载客，是排除法推出来的，没有核实〔估〕。</li>
+    </ul>
+  </details>
+  <details>
+    <summary>怎么做</summary>
+    <ul>
+      <li>车：墨尔本没找到能跑 Uber 的 GLC 出租；可以买二手（汽油 GLC 200 2020–2022 年约 $30,000–55,000，电动 EQC 约 $57,000–75,000），或租 Splend 的 EQB / Lexus ES（约 $460/周，锁 52 周）。</li>
+      <li>去机场那一程：清晨 4–8 点约 20% 的单去机场；目的地功能每天 2 次；接单前能看到目的地，只接去机场的；预约单可以提前排好。</li>
+      <li>回市区那一程：如果只接 Black 单（澳洲能不能只开 Black 没确认），等多久看 Black 单量和排队的 Black 车数；接预约接机不走虚拟队列，但要在机场等候区等乘客落地、要提前上线，单量不知道；短单之后 6 小时内回来可以优先回队。</li>
+      <li>时段：清晨送机；早上国际航班到达；周五下午、周日晚上机场最忙〔说〕。</li>
+    </ul>
+  </details>
+  <details>
+    <summary>风险</summary>
+    <ul>
+      <li>机场接单权限可能被关：据报道〔说〕，2026 年 11 月 10 日公平工作委员会裁定，Uber 不让司机在墨尔本机场接单不算「停用账号」，大概没法按停用账号去申诉。</li>
+      <li>复制的人多了，机场 Black 的队会变长。</li>
+      <li>Splend 锁 52 周，约 $31,000。</li>
+      <li>车龄：2020 年的车，2027 年底就过 7 年了〔估〕。</li>
+    </ul>
+  </details>
+</section>
+
+<section class="card">
+  <h2>清洁 + Uber：一年怎么分配</h2>
+  <div class="cw"><canvas id="c-alloc" role="img" aria-label="全年每周小时分配的堆叠柱图：9 月到次年 1 月（机场偏旺），Uber（Black 机场来回）45 小时、清洁 15 小时；2、3、7 月，Uber 30、清洁 15、退租清洁 15；4、5、6、8 月，Uber 30、清洁 20。"></canvas></div>
+  <div class="tbl"><table>
+    <caption>每小时到手（扣 GST 和油电，未扣个税）</caption>
+    <thead><tr><th>方案</th><th>扣车的固定成本之前</th><th>Uber 每周 30 小时</th><th>45 小时</th><th>60 小时</th></tr></thead>
+    <tbody>
+      <tr><td>租 Corolla，跑 UberX 机场来回</td><td>$27.5</td><td>$16.1</td><td>$19.6</td><td>$19.5</td></tr>
+      <tr><td>Splend Lexus ES，跑 Black 机场来回</td><td>$46.6</td><td>$27.9</td><td>$33.2</td><td>$35.9</td></tr>
+      <tr><td>自己的 2022 汽油 GLC，跑 Black 机场来回</td><td>$37.4</td><td>$28.1</td><td>$31.2</td><td>$32.7</td></tr>
+      <tr><td>清洁，按 award 发工资（算通勤）</td><td>$28–34，另加 12% super</td><td>—</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>有了 Black 车，Uber 该占大头：车钱是固定的（Splend 还锁 52 周），多开的每一小时值扣车钱之前的 $37–47，比 award 清洁的 $31 高。淡季少开，是因为机场单少〔估〕。</li>
+    <li>要不要弄 Black 车，看你每周能开多少小时：摊上车的固定成本后，Lexus ES 要每周开约 38 小时、自己的 GLC 约 44 小时，每小时才追得上 award 清洁；算上有车后清洁每周多挣的约 $160，门槛降到约 26 小时和 19 小时。Lexus ES 跑 Black 比 Corolla 跑 UberX 多挣，只要每周约 12 小时机场来回。</li>
+    <li>季节正好错开：机场 10–12 月明显旺（按天 104–107），9 月和 1 月略高（约 103）；退租清洁 2、3、7 月旺（107–126）。</li>
+    <li>清洁里最值钱的留着：自己的客户（$33–42）、NDIS（$38–50）、旺季退租（$30–35）；最先让出去的是 award 打工的清洁。</li>
+    <li>清洁有 Uber 给不了的：super、工伤保险；而且 Uber 可能关掉你的机场接单权限。</li>
+  </ul>
+  <p class="hint">一年约 $99,500，未扣个税；每周到手里含有车后清洁多挣的约 $160。租车超过里程上限另收费（Splend 每周 1,000 公里，Karmo 1,500 公里），表里已算进去。对比原来的方案（30 小时清洁 + 周五周六夜 10 小时 UberX，租 Corolla）：每周约 $1,065，合 $26.6/h。</p>
+  <p class="hint">没有 Black 车的话：Uber 只开周五周六夜和清晨机场来回，每周 10–15 小时，清洁占 70–80%。</p>
+  <p class="hint">按每趟排队加等单 40 分钟、来回都是 Black 算〔估〕。真开始跑，先记两周每趟排了多久。</p>
 </section>
 
 <section class="card">
   <h2>净时薪对比</h2>
-  <div class="cw tall"><canvas id="c-rate" role="img" aria-label="各种工作的每小时净收入范围，按中位数从高到低：NDIS 残障家政最高 38 到 50 澳元，空车专程去机场排队最低 8 到 17 澳元。清洁为青色，Uber 为琥珀色。"></canvas></div>
+  <div class="cw tall"><canvas id="c-rate" role="img" aria-label="各种工作的每小时净收入范围，按中位数从高到低：大活动散场开 Uber 34 到 55 澳元最高，NDIS 残障家政 38 到 50 澳元次之，Uber Eats 电单车 12 到 18.5 澳元最低。Black 机场来回 28 到 36 澳元，UberX 机场来回 25 到 35 澳元。清洁为青色，Uber 为琥珀色。"></canvas></div>
   <p class="hint">award 清洁另加 12% super，有工伤保险；华人圈现金工和 Airtasker 都没有。</p>
-  <p class="hint">Uber 数字已扣抽成、油费、保险和 GST，多数靠模型。机场两行口径不同：空车那行未扣 GST 和车钱；载客那行开车部分扣了 GST、未扣车租。</p>
+  <p class="hint">Uber 数字已扣抽成、油费、保险和 GST，多数靠模型。UberX 机场那行没扣车租；Black 那行已经摊上车的固定成本。</p>
 </section>
 
 <section class="card">
   <h2>全年月历（按天调整的指数，100 = 平均）</h2>
-  <div class="cw"><canvas id="c-season" role="img" aria-label="全年 12 个月的需求指数折线图：退租清洁 2 月最高 126，网约车 12 月最高 108，餐饮外卖消费 12 月最高 114，100 为平均。"></canvas></div>
+  <div class="cw"><canvas id="c-season" role="img" aria-label="全年 12 个月的需求指数折线图：退租清洁 2 月最高 126，网约车 12 月最高 108，机场客流（按天）12 月最高 107、5 月最低 91，100 为平均。"></canvas></div>
   <div class="plan" id="plan"></div>
-  <p class="hint">退租：RTBA 退押金数，4 个财年平均〔硬〕，比实际搬出晚几天到几周。网约车：Safe Transport Victoria 2022-23 一年，含出租车〔硬〕。餐饮：ABS 维州餐饮营业额，不只外卖。</p>
+  <p class="hint">退租：RTBA 退押金数，4 个财年平均〔硬〕，比实际搬出晚几天到几周。网约车：Safe Transport Victoria 2022-23 一年，含出租车〔硬〕。机场：BITRE 四年平均，按天折算〔硬/估〕。</p>
 </section>
 
 <section class="card">
@@ -108,11 +277,11 @@ footer p { margin: 0; }
 <section class="card">
   <h2>没车：租车还是买车</h2>
   <div class="cw tall"><canvas id="c-car" role="img" aria-label="每周开 Uber 0、10、25、40 小时时，买车、租 Karmo、租 Splend MG4、租 Lexus 跑 Black 比没车每周多挣的中位数。开 40 小时时四种都在 $676–785 之间。"></canvas></div>
-  <p class="hint">前提：每周做 25 小时清洁；有车后清洁每周多挣约 $160（估）。买车按持有 2 年算。40 小时加清洁等于每周 65 小时，只是上限参考。Lexus 要锁 52 周，0 小时不适用。</p>
+  <p class="hint">前提：每周做 25 小时清洁；有车后清洁每周多挣约 $160〔估〕。买车按持有 2 年算。40 小时加清洁等于每周 65 小时，只是上限参考。Lexus 要锁 52 周，0 小时不适用。</p>
 </section>
 
 <section class="card">
-  <h2>机场：排队时用电脑干活划不划算</h2>
+  <h2>机场来回：排队时用电脑干活</h2>
   <div class="ctl">
     <label for="x">在家干电脑活，每小时值多少：<span class="num" id="xv"></span> <span class="num" id="vv" style="color:var(--muted)"></span>
       <input id="x" type="range" min="0" max="50" step="1" value="30" /></label>
@@ -121,12 +290,12 @@ footer p { margin: 0; }
     <label class="chk" for="g"><input id="g" type="checkbox" checked /> 开车部分扣 GST（×10/11）</label>
   </div>
   <div class="tiles" id="tiles" aria-live="polite"></div>
-  <div class="cw short"><canvas id="c-loop" role="img" aria-label="每小时收入随排队分钟数变化的折线图：空车专程去机场、载客去机场再拉回来、市区开 UberX 三条线，竖线标出当前排队时间。"></canvas></div>
+  <div class="cw short"><canvas id="c-loop" role="img" aria-label="每小时收入随排队分钟数变化的折线图：UberX 来回、Black 来回、市区开 UberX 三条线，竖线标出当前排队时间。"></canvas></div>
   <ul>
-    <li>空车专程去：开车那 75 分钟只合约 $20.9/h（未扣 GST），比市区还低。排队干活只能把整趟拉近你电脑活的价值，超不过它。</li>
-    <li>载客去机场：去程、回程都是长单，开车那段合约 $41.7/h。一天最多 1–2 趟（目的地功能每天 2 次，一趟连排队 2.5–3.5 小时）。</li>
+    <li>来回都载客：去程、回程都是长单。UberX 一趟来回司机实拿约 $75（扣油钱后约 $66），Black 约 $124（扣油钱后约 $112）。</li>
+    <li>一天最多 1–2 趟靠目的地功能（每天 2 次），其余靠清晨顺路单、挑去机场的单和预约单。</li>
     <li>等候场是露天车位，没有 Wi-Fi 和休息室，只能在自己车里干；被叫到要马上走，适合学习和不用实时回复的活。附近厕所：二级等候场走到 T4 约 150 米、BP 加油站约 300 米。</li>
-    <li>假设：UberX 司机实拿 去机场 $35.34、从机场 $39.82；每公里 15c；空车那趟 58 km、$5 过路费；车租没算。排队时间没有 2025–26 年数据。</li>
+    <li>假设：UberX 每公里 15c，Black 20c；车租没算。排队时间没有 2025–26 年的官方数据。</li>
   </ul>
 </section>
 
@@ -137,8 +306,8 @@ footer p { margin: 0; }
 </section>
 
 <footer>
-  <p>把握：高 = 多个硬数据一致；中 = 有硬数据，但关键一环靠模型或估计；低 = 主要靠假设。</p>
-  <p>数据来源：RTBA、Safe Transport Victoria、ABS、Fair Work award 工资表、ATO、Uber 和墨尔本机场官网、Karmo / Splend 挂牌价、招聘广告样本。仅供参考，不是财务或税务建议。</p>
+  <p>把握：高 = 至少 2 个独立的硬数据来源，或跨 5 年以上的硬数据，方向一致；中 = 只有 1 个硬数据来源或一年数据，或主要靠模型但能和独立数据对上；低 = 主要靠假设或个别案例。</p>
+  <p>数据来源：RTBA、Safe Transport Victoria、ABS、BITRE、Fair Work award 工资表、ATO、Uber 和墨尔本机场官网、Uber 澳洲税务汇总说明、Karmo / Splend 挂牌价、Finder、招聘广告样本、一位司机的税务汇总截图。仅供参考，不是财务或税务建议。</p>
 </footer>
 </div>
 
@@ -147,21 +316,22 @@ footer p { margin: 0; }
 (function () {
   function loopRates(X, W, gst) {
     var g = gst ? 10 / 11 : 1, v = 0.7 * X;
-    var DE = 39.82 - 58 * 0.15 - 5, DF = 35.34 + 39.82 - 61 * 0.15;
+    var DF = 35.34 + 39.82 - 61 * 0.15, DB = 111.54; // DB：Black 一趟来回司机实拿，已扣 61 km × 20c 油钱
     return {
       city: 23 * g,
-      empty: (DE * g + v * W / 60) / ((75 + W) / 60),
       fareOut: (DF * g + v * W / 60) / ((95 + W) / 60),
+      black: (DB * g + v * W / 60) / ((95 + W) / 60),
       home: X, v: v
     };
   }
-  [[loopRates(0, 60, false).empty, 11.6], [loopRates(0, 60, false).fareOut, 25.6],
-   [loopRates(0, 60, true).fareOut, 23.2], [loopRates(50, 120, false).fareOut, 38.0]]
-    .forEach(function (c, i) { console.assert(Math.abs(c[0] - c[1]) <= 0.06, "loopRates check " + i + " failed: " + c[0]); });
+  [[loopRates(0, 60, false).fareOut, 25.6, 0.06], [loopRates(0, 60, true).fareOut, 23.2, 0.06],
+   [loopRates(50, 120, false).fareOut, 38.0, 0.06],
+   [loopRates(0, 60, false).black, 43.2, 0.1], [loopRates(0, 20, false).black, 58.2, 0.1]]
+    .forEach(function (c, i) { console.assert(Math.abs(c[0] - c[1]) <= c[2], "loopRates check " + i + " failed: " + c[0]); });
 
   var cs = getComputedStyle(document.documentElement);
   var css = function (n) { return cs.getPropertyValue(n).trim(); };
-  var teal = css("--accent"), amber = css("--warn"), muted = css("--muted"), line = css("--line"), fg = css("--fg");
+  var teal = css("--accent"), amber = css("--warn"), muted = css("--muted"), line = css("--line"), fg = css("--fg"), panel = css("--panel");
   Chart.defaults.font.family = css("--font-body");
   Chart.defaults.color = muted;
   Chart.defaults.maintainAspectRatio = false;
@@ -170,23 +340,134 @@ footer p { margin: 0; }
   var wrapLabel = function (s, n) { var o = []; for (var i = 0; i < s.length; i += n) o.push(s.slice(i, i + n)); return o; };
   var narrow = window.innerWidth < 640;
   var mk = function (id, cfg) { return new Chart(document.getElementById(id), cfg); };
+  var months = []; for (var m = 1; m <= 12; m++) months.push(m + "月");
+  // 横条图：在每根条的末端写数值，text(i) 给第 i 根条的文字
+  var tips = function (text) {
+    return { id: "tips", afterDatasetsDraw: function (ch) {
+      var c = ch.ctx;
+      c.save(); c.font = (narrow ? 10 : 12) + "px " + Chart.defaults.font.family; c.textBaseline = "middle";
+      c.lineWidth = 3; c.lineJoin = "round"; c.strokeStyle = panel; c.fillStyle = fg;
+      ch.getDatasetMeta(0).data.forEach(function (b, i) { c.strokeText(text(i), b.x + 6, b.y); c.fillText(text(i), b.x + 6, b.y); });
+      c.restore();
+    } };
+  };
+
+  // 乘客付的钱怎么分：[名称（| 换行）, 起点, 终点, 颜色]
+  var fall = [
+    ["乘客付", 0, 97, muted],
+    ["每单附加费|（州政府）", 95.75, 97, amber],
+    ["过路费|（交给收费公路）", 90.75, 95.75, amber],
+    ["预订费|（归 Uber）", 88.75, 90.75, amber],
+    ["机场接客费", 83.93, 88.75, amber],
+    ["Uber 服务费 ~27.5%", 60.85, 83.93, amber],
+    ["司机实拿", 0, 60.85, teal],
+    ["GST|（实拿的 1/11）", 55.32, 60.85, amber],
+    ["这一单的|油电和保养", 47.8, 55.32, amber],
+    ["剩下", 0, 47.8, teal]
+  ];
+  var cur = 97;
+  fall.forEach(function (r) { console.assert(r[2] === cur, "fall chain broken at " + r[0]); if (r[1]) cur = r[1]; });
+  var fallAmt = function (r) { return "$" + (r[2] - r[1]).toFixed(2); };
+  mk("c-fall", {
+    type: "bar",
+    data: {
+      labels: fall.map(function (r) { return r[0].split("|"); }),
+      datasets: [{ data: fall.map(function (r) { return [r[1], r[2]]; }), backgroundColor: fall.map(function (r) { return r[3]; }), borderSkipped: false, borderRadius: 3, maxBarThickness: 24 }]
+    },
+    options: {
+      indexAxis: "y",
+      layout: { padding: { right: 44 } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: {
+        title: function (it) { return fall[it[0].dataIndex][0].replace("|", ""); },
+        label: function (c) { return fallAmt(fall[c.dataIndex]); },
+        afterLabel: function (c) { return c.dataIndex === 8 ? "电车约 $3，汽油 GLC 约 $12" : ""; }
+      } } },
+      scales: {
+        x: { min: 0, max: 100, grid: grid, ticks: tick, title: { display: true, text: "金额（澳元）", color: muted } },
+        y: { grid: { display: false }, ticks: { color: fg, autoSkip: false, font: { size: narrow ? 10 : 12 } } }
+      }
+    },
+    plugins: [tips(function (i) { return fallAmt(fall[i]); })]
+  });
+
+  // 案例：要跑出 10 月流水，每周得干几小时
+  var elim = [
+    ["UberX 市区平均", 117], ["UberX 天天都是|周五周六夜的水平", 85], ["Black 市区普通单（按假设）", 106],
+    ["UberX 机场来回", 84], ["Black 机场来回|（每趟等 50 分钟）", 64], ["Black 机场来回|（每趟等 30 分钟）", 55]
+  ];
+  var ref70 = { id: "ref70", afterDatasetsDraw: function (ch) {
+    var a = ch.chartArea, px = ch.scales.x.getPixelForValue(70), c = ch.ctx;
+    c.save(); c.strokeStyle = fg; c.setLineDash([4, 3]); c.beginPath(); c.moveTo(px, a.top); c.lineTo(px, a.bottom); c.stroke();
+    c.setLineDash([]); c.fillStyle = fg; c.textAlign = "center"; c.textBaseline = "bottom";
+    c.font = (narrow ? 10 : 12) + "px " + Chart.defaults.font.family; c.fillText("一周 70 小时", px, a.top - 4); c.restore();
+  } };
+  mk("c-elim", {
+    type: "bar",
+    data: {
+      labels: elim.map(function (r) { return r[0].split("|"); }),
+      datasets: [{ data: elim.map(function (r) { return r[1]; }), backgroundColor: elim.map(function (r) { return r[1] > 75 ? muted : teal; }), borderSkipped: false, borderRadius: 3, maxBarThickness: 24 }]
+    },
+    options: {
+      indexAxis: "y",
+      layout: { padding: { top: 18, right: 32 } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: {
+        title: function (it) { return elim[it[0].dataIndex][0].replace("|", ""); },
+        label: function (c) { return "每周 " + c.raw + " 小时"; }
+      } } },
+      scales: {
+        x: { min: 0, max: 120, grid: grid, ticks: tick, title: { display: true, text: "要跑出 10 月流水，每周得干几小时", color: muted } },
+        y: { grid: { display: false }, ticks: { color: fg, autoSkip: false, font: { size: narrow ? 10 : 12 } } }
+      }
+    },
+    plugins: [ref70, tips(function (i) { return String(elim[i][1]); })]
+  });
+
+  // 一年怎么分配（小时/周）
+  var payHi = "每周到手约 $2,120，合 $35.3/h", payMid = "每周到手约 $1,940，合 $32.4/h", payLo = "每周到手约 $1,620，合 $32.3/h";
+  var pay = [payHi, payMid, payMid, payLo, payLo, payLo, payMid, payLo, payHi, payHi, payHi, payHi];
+  var stack = { borderColor: panel, borderWidth: 1, maxBarThickness: 24 };
+  mk("c-alloc", {
+    type: "bar",
+    data: {
+      labels: months,
+      datasets: [
+        Object.assign({ label: "Uber（Black 机场来回）", data: [45,30,30,30,30,30,30,30,45,45,45,45], backgroundColor: amber }, stack),
+        Object.assign({ label: "清洁", data: [15,15,15,20,20,20,15,20,15,15,15,15], backgroundColor: teal }, stack),
+        Object.assign({ label: "退租清洁", data: [0,15,15,0,0,0,15,0,0,0,0,0], backgroundColor: teal + "88" }, stack)
+      ]
+    },
+    options: {
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { labels: { color: fg, boxWidth: 12, font: { size: narrow ? 10 : 12 } } },
+        tooltip: { filter: function (it) { return it.raw > 0; }, callbacks: {
+          label: function (c) { return c.dataset.label + "：" + c.raw + " 小时"; },
+          footer: function (it) { return pay[it[0].dataIndex]; }
+        } }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { color: muted, autoSkip: false, maxRotation: 0, font: { size: narrow ? 9 : 12 } } },
+        y: { stacked: true, min: 0, grid: grid, ticks: tick, title: { display: true, text: "每周小时", color: muted } }
+      }
+    }
+  });
 
   // 净时薪
   var rates = [
     ["清洁：NDIS 残障家政（Mable）", 38, 50, 0, "中"], ["清洁：自己的固定家政客户", 33, 42, 0, "中"],
     ["Uber：大活动散场（一年 5–10 晚）", 34, 55, 1, "低"], ["清洁：award casual（算通勤）", 28, 34, 0, "高"],
-    ["Uber：载客去机场 + 排队用电脑", 25, 35, 1, "中"], ["Uber：周五周六晚上", 22, 33, 1, "中"],
+    ["UberX：机场来回 + 排队用电脑（未扣车租）", 25, 35, 1, "中"], ["Uber：Black 机场来回（每周 30–60 小时，已扣车钱）", 28, 36, 1, "低"],
+    ["Uber：周五周六晚上", 22, 33, 1, "中"],
     ["清洁：华人圈现金工（实际）", 22, 28, 0, "中"], ["清洁：Airtasker 两室退租单", 21, 27, 0, "中"],
-    ["Uber：全时段平均", 15, 20, 1, "中"], ["Uber Eats 电单车", 12, 18.5, 1, "中"],
-    ["Uber：空车专程去机场排队", 8, 17, 1, "中"]
+    ["Uber：全时段平均", 15, 20, 1, "中"], ["Uber Eats 电单车", 12, 18.5, 1, "中"]
   ];
   rates.sort(function (a, b) { return (b[1] + b[2]) - (a[1] + a[2]); });
   mk("c-rate", {
     type: "bar",
     data: {
       labels: rates.map(function (r) {
-        var name = r[0].split("：").pop();
-        return [narrow ? name.replace(/（.*）/, "") : name, (r[3] ? "Uber" : "清洁") + " · 把握" + r[4]];
+        var p = r[0].split("："), name = p.pop();
+        return [narrow ? name.replace(/（.*）/, "") : name, (p[0] || (r[3] ? "Uber" : "清洁")) + " · 把握" + r[4]];
       }),
       datasets: [{ data: rates.map(function (r) { return [r[1], r[2]]; }), backgroundColor: rates.map(function (r) { return r[3] ? amber : teal; }), borderSkipped: false, borderRadius: 3 }]
     },
@@ -201,7 +482,6 @@ footer p { margin: 0; }
   });
 
   // 月历
-  var months = []; for (var m = 1; m <= 12; m++) months.push(m + "月");
   var base = { pointRadius: 2, tension: 0 };
   mk("c-season", {
     type: "line",
@@ -210,7 +490,7 @@ footer p { margin: 0; }
       datasets: [
         Object.assign({ label: "退租清洁", data: [100,126,107,89,95,97,117,100,90,94,93,93], borderColor: teal, backgroundColor: teal, borderWidth: 2.5 }, base),
         Object.assign({ label: "网约车", data: [90,99,103,101,100,102,96,94,101,104,102,108], borderColor: amber, backgroundColor: amber, borderWidth: 2.5 }, base),
-        Object.assign({ label: "餐饮外卖消费", data: [88,94,99,100,98,97,98,100,104,103,107,114], borderColor: muted, backgroundColor: muted, borderWidth: 1.5, borderDash: [5, 4] }, base)
+        Object.assign({ label: "机场客流（按天）", data: [103,97,96,100,91,94,102,97,102,104,105,107], borderColor: muted, backgroundColor: muted, borderWidth: 1.5, borderDash: [5, 4] }, base)
       ]
     },
     options: {
@@ -223,8 +503,9 @@ footer p { margin: 0; }
     }
   });
   var plan = [
-    "清洁为主；Uber 只开澳网晚上和大活动", "<b>退租清洁</b>（1 月下旬到 3 月上旬）", "两边都做；大活动多", "F1 那周开 Uber，其余做固定客户",
-    "平", "平", "退租近两年冒高（按天 130），原因不明", "Uber 略淡", "AFL 决赛圈周末晚上开 Uber", "偏 Uber：AFL 总决赛、春季赛马", "平", "<b>主攻 Uber</b>：派对季、Boxing Day、跨年"
+    "机场旺（103），Uber 机场来回为主；市区网约车最淡", "<b>退租最旺（126），清洁为主</b>", "退租还旺（107），清洁、Uber 各半", "两边都淡，少干点；F1 那周开 Uber",
+    "机场最淡（91），适合休息", "两边都淡", "退租次旺（117，近两年冒高，原因不明），学校假期机场也旺，两边都做", "两边都淡",
+    "机场转旺，AFL 决赛圈，Uber 为主", "机场旺，春季赛马，Uber 为主", "机场旺，Uber 为主", "<b>机场、网约车都最旺，Uber 为主</b>"
   ];
   document.getElementById("plan").innerHTML = plan.map(function (t, i) {
     var cls = i === 1 ? ' class="hot"' : i === 11 ? ' class="hotu"' : "";
@@ -253,7 +534,7 @@ footer p { margin: 0; }
         { label: "买 2019 Corolla Hybrid", data: [35, 249, 505, 776], backgroundColor: teal },
         { label: "租 Karmo Corolla Hybrid（$369/周）", data: [-159, 156, 464, 785], backgroundColor: mid },
         { label: "租 Splend MG4 电车（$309/周）", data: [-113, 187, 478, 759], backgroundColor: "#9bd1c8" },
-        { label: "租 Lexus ES 跑 Black（Black 单占 20%）", data: [null, -30, 327, 676], backgroundColor: amber }
+        { label: "租 Lexus ES，混在市区单里跑 Black（Black 单占 20%）", data: [null, -30, 327, 676], backgroundColor: amber }
       ]
     },
     options: {
@@ -275,8 +556,8 @@ footer p { margin: 0; }
   var loop = mk("c-loop", {
     type: "line",
     data: { labels: W, datasets: [
-      { label: "空车专程去机场", borderColor: amber, backgroundColor: amber, borderWidth: 2, pointRadius: 0, data: [] },
-      { label: "载客去机场再拉回来", borderColor: teal, backgroundColor: teal, borderWidth: 2.5, pointRadius: 0, data: [] },
+      { label: "UberX 来回", borderColor: teal, backgroundColor: teal, borderWidth: 2.5, pointRadius: 0, data: [] },
+      { label: "Black 来回", borderColor: amber, backgroundColor: amber, borderWidth: 2.5, pointRadius: 0, data: [] },
       { label: "市区开 UberX", borderColor: muted, backgroundColor: muted, borderWidth: 1.5, borderDash: [5, 4], pointRadius: 0, data: [] }
     ] },
     options: {
@@ -291,14 +572,14 @@ footer p { margin: 0; }
     document.getElementById("xv").textContent = "$" + X + "/h";
     document.getElementById("vv").textContent = "在等候场按 70% 算：$" + r.v.toFixed(1) + "/h";
     document.getElementById("wv").textContent = Wm + " 分钟";
-    var best = Math.max(r.city, r.empty, r.fareOut);
-    var items = [["市区开 UberX", r.city], ["空车专程去机场", r.empty], ["载客去机场再拉回来", r.fareOut], ["在家专心干电脑活", r.home]];
+    var best = Math.max(r.city, r.fareOut, r.black);
+    var items = [["市区开 UberX", r.city], ["UberX 来回", r.fareOut], ["Black 来回", r.black], ["在家专心干电脑活", r.home]];
     document.getElementById("tiles").innerHTML = items.map(function (t, i) {
       return "<div class=\"tile" + (i < 3 && t[1] === best ? " best" : "") + "\">" + t[0] + "<span class=\"v\">$" + t[1].toFixed(1) + "/h</span></div>";
     }).join("");
     var rows = W.map(function (w) { return loopRates(X, w, gst); });
-    loop.data.datasets[0].data = rows.map(function (q) { return q.empty; });
-    loop.data.datasets[1].data = rows.map(function (q) { return q.fareOut; });
+    loop.data.datasets[0].data = rows.map(function (q) { return q.fareOut; });
+    loop.data.datasets[1].data = rows.map(function (q) { return q.black; });
     loop.data.datasets[2].data = rows.map(function (q) { return q.city; });
     loop.update("none");
   }
