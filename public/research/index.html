@@ -410,7 +410,8 @@ footer p { margin: 0; }
 
   <h3>一个机场来回，司机到手多少</h3>
   <div class="cw short"><canvas id="c-tier" role="img" aria-label="市区到机场再回市区一个来回，司机扣抽成后到手：按 Uber 均价，X 80、Comfort 95、Comfort Electric 107、XL 118、Black 130 澳元；司机自己说的，Comfort 75、Comfort Electric 85、Black 115 澳元。"></canvas></div>
-  <p class="hint">Uber 航线均价是 2024 年 12 月的数据〔硬〕，加了 2026 年 3 月给司机的平均 +6%（各档平摊是假设）；扣 27.5% 抽成（没核实）和州附加费、过路费、预订费、机场费〔估〕。司机没说 X 和 XL 的价。</p>
+  <p class="hint">Uber 航线均价是 2024 年 12 月的数据〔硬〕，加了 2026 年 3 月给司机的平均 +6%（各档平摊是假设）；扣 27.5% 抽成（没核实）和州附加费、过路费、预订费、机场费〔估〕。司机没说 X 和 XL 的价，这张图空着；下面几张图按他的数约是均价的八成推算。</p>
+  <p class="hint"><b>两种颜色只差在单价：</b>青色用 Uber 官网公布的乘客平均付价，里面有高峰加价的单，所以偏高；橙色用司机说的价，更像平时不加价的单。你实际到手大概在两者之间，看接到加价单多不多。下面几张图同样两种颜色，其他假设完全一样。</p>
 
   <h3>每周净赚：开哪辆车</h3>
   <div class="cw tall"><canvas id="c-net" role="img" aria-label="每周开 25 小时、一直跑市区和机场来回，扣 GST 和全部养车成本、税前的每周净赚。按 Uber 均价：留着 HR-V 跑 X 382，凯美瑞跑 Comfort 496，RAV4 跑 Comfort 438，Model Y 在家充电跑 Comfort Electric 548，Model Y 只用超充 433，EQB 全跑 Black 645 澳元。按司机报价：233、320、263、354、256、513 澳元。"></canvas></div>
@@ -831,8 +832,8 @@ footer p { margin: 0; }
   mk("c-tier", {
     type: "bar",
     data: { labels: tier.labels, datasets: [
-      { label: "按 Uber 均价", data: tier.avg, backgroundColor: teal, maxBarThickness: 18 },
-      { label: "司机自己说的", data: tier.driver, backgroundColor: amber, maxBarThickness: 18 }
+      { label: "单价按 Uber 公布的均价（含高峰加价）", data: tier.avg, backgroundColor: teal, maxBarThickness: 18 },
+      { label: "单价按司机说的（像不加价时段）", data: tier.driver, backgroundColor: amber, maxBarThickness: 18 }
     ] },
     options: {
       indexAxis: "y",
@@ -853,8 +854,8 @@ footer p { margin: 0; }
   mk("c-net", {
     type: "bar",
     data: { labels: net.map(function (r) { return r[0]; }), datasets: [
-      { label: "按 Uber 均价", data: net.map(function (r) { return r[1]; }), backgroundColor: teal, maxBarThickness: 18 },
-      { label: "按司机报价", data: net.map(function (r) { return r[2]; }), backgroundColor: amber, maxBarThickness: 18 }
+      { label: "单价按 Uber 公布的均价（含高峰加价）", data: net.map(function (r) { return r[1]; }), backgroundColor: teal, maxBarThickness: 18 },
+      { label: "单价按司机说的（像不加价时段）", data: net.map(function (r) { return r[2]; }), backgroundColor: amber, maxBarThickness: 18 }
     ] },
     options: {
       indexAxis: "y",
@@ -916,8 +917,8 @@ footer p { margin: 0; }
   mk("c-alt", {
     type: "bar",
     data: { labels: alt.map(function (r) { return r[0]; }), datasets: [
-      { label: "按 Uber 均价", data: alt.map(function (r) { return r[1]; }), backgroundColor: teal, maxBarThickness: 16 },
-      { label: "按司机报价", data: alt.map(function (r) { return r[2]; }), backgroundColor: amber, maxBarThickness: 16 }
+      { label: "单价按 Uber 公布的均价（含高峰加价）", data: alt.map(function (r) { return r[1]; }), backgroundColor: teal, maxBarThickness: 16 },
+      { label: "单价按司机说的（像不加价时段）", data: alt.map(function (r) { return r[2]; }), backgroundColor: amber, maxBarThickness: 16 }
     ] },
     options: {
       indexAxis: "y",
