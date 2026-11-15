@@ -45,6 +45,7 @@ a { color: var(--accent); }
 .cw { position: relative; height: 340px; margin-top: 8px; }
 .cw.tall { height: 520px; }
 .cw.short { height: 260px; }
+.cw.xtall { height: 820px; }
 @media (min-width: 640px) { .cw.tall { height: 440px; } .cw { height: 360px; } .cw.short { height: 280px; } }
 .plan { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
 @media (min-width: 640px) { .plan { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
@@ -118,7 +119,7 @@ footer p { margin: 0; }
   <div class="item">Black 机场来回、来回都载客，能做出很高的流水。一位开奔驰 GLC 一类 SUV 的司机〔说〕10 月流水 $22,390〔硬〕；排除法推出他大部分时间在跑 Black 机场来回，倒推约 233 单、每周 50–65 小时，到手约 $8,000–10,800（未扣个税）〔估〕。<span class="badge low">低</span></div>
   <div class="item">流水不等于到手：Black 机场到市区乘客付 $97，司机实拿约 $61；市区到机场乘客付 $95，司机实拿约 $63；再扣 GST 和车的成本。<span class="badge mid">中</span></div>
   <div class="item">没车：每周开 10–25 小时 UberX，买 2019 Corolla Hybrid 比租车每周多挣 $27–93；车同时用来做清洁和开 Uber 才明显划算（每周约 +$249）。<span class="badge mid">中</span></div>
-  <div class="item">开什么车（要 SUV，清洁也能用）：能在家充电，选特斯拉 Model Y 跑 Comfort Electric，按估算每周比 RAV4 混动跑 Comfort 多赚约 $50–110，差别几乎全来自 Comfort Electric 单价高约一成；不能在家充电，两者差不多，RAV4 风险小。先租 Model Y 试 2–3 个月。「必须电车」不是规定。每年换车省不了税，每换一次净亏约 $3,000–4,500；私人买的车卖时还要交售价 1/11 的 GST。<a href="#ev">见下面</a><span class="badge low">车：低到中</span><span class="badge">换车省税：高</span></div>
+  <div class="item">开什么车（要 SUV，清洁也能用）：能在家充电，选特斯拉 Model Y 跑 Comfort Electric，按估算每周比 RAV4 混动跑 Comfort 多赚约 $50–110，差别几乎全来自 Comfort Electric 单价高约一成；不能在家充电，两者差不多，RAV4 风险小。先租 Model Y 试 2–3 个月。「必须电车」不是规定。每年换车省不了税，每换一次净亏约 $3,000–4,500；私人买的车卖时还要交售价 1/11 的 GST。<a href="#ev">见下面</a>；15 款 SUV 逐款对比<a href="#suv">见这里</a>，首选二手 Model Y，省钱选 Atto 3，要明确网约车保修选起亚 EV5。<span class="badge low">车：低到中</span><span class="badge">换车省税：高</span></div>
   <div class="item">租豪车混在市区普通单里跑 Black 不划算（Black 单要占 36–52%）。墨尔本没找到能跑 Uber 的 GLC 出租；能租来跑 Black 的只有 Splend 的 Lexus ES、奔驰 EQB、Cadillac Lyriq，都要锁 52 周。<span class="badge mid">中</span></div>
 </section>
 
@@ -477,6 +478,46 @@ footer p { margin: 0; }
   <p class="hint">来源：Uber 墨尔本车辆要求页、Uber 租车页、Uber 航线均价、Splend 和 Karmo 挂牌价、carsguide 二手车挂牌、维州 SRO 印花税、ATO GSTR 2004/8 和处置车辆说明、Maxxia novated 保险条款、ESC 和电力公司电价、FuelNow 油价。笔记 notes/round9/v1、v2。仅供参考，不是税务建议。</p>
 </section>
 
+<section class="card" id="suv">
+  <h2>尽职调查：能跑 Uber 的 SUV 逐款对比</h2>
+  <p>清洁也要用车，所以只比 SUV。每款车能跑哪几档，用的是 Uber 墨尔本合格车型名单（2026-09-23 更新）〔硬〕；二手价、能耗、空间、保修、保值、保险、维修、召回、试租逐款查过。电车按全跑 Comfort Electric 算，混动按 Comfort 算。<span class="badge mid">选车：中</span><span class="badge low">每周金额：低到中</span></p>
+  <div class="cw xtall"><canvas id="c-dd" role="img" aria-label="15 款 SUV 每周净赚（每周 25 小时、按 Uber 均价、税前），在家充电 / 只用外面快充：比亚迪 Atto 3 633 / 429，丰田 bZ4X 567 / 431，起亚 EV6 550 / 425，特斯拉 Model Y 543 / 435，起亚 EV5 531 / 345，现代 IONIQ 5 515 / 382，比亚迪 Sealion 7 510 / 354，斯柯达 Enyaq 500 / 350，奔驰 EQB 479 / 270，丰田 Corolla Cross 混动 479，RAV4 混动 441，本田 CR-V 混动 428，现代 Tucson 混动 421，极氪 7X 403 / 301，丰田 Kluger 混动 392 澳元。"></canvas></div>
+  <p class="hint">假设〔估〕：每周 25 小时市区↔机场来回；单价按 Uber 公布的均价（按司机说的单价，每款都少约 $175–195）；扣 GST 和全部养车成本（掉价、网约车保险、能耗、保养轮胎、资金利息、注册），税前。在家充电指 10A 插座；混动两根一样长。EQB 和 Kluger 只按 Comfort Electric / Comfort 算，没算 Black / XL。保险都是估的，没有报价。模型 notes/round9/r16-dd-compare.py。</p>
+  <ul>
+    <li><b>电车多赚，靠的是 Comfort Electric 单价，不是养车便宜：</b>每周养车成本 Model Y $426、RAV4 $422，差不多；只有 Atto 3（$330）和 bZ4X（$399）比 RAV4 低。Model Y 对 RAV4：全接到 CE 单 +$102，接一半 +$49，接不到 −$4〔估〕。</li>
+    <li><b>电车之间差得不多：</b>除了 Atto 3，主流电车都在 $500–567/周之间，在误差范围内。Atto 3 领先主要因为保险估得低（$3,750 对 Model Y $7,050）；Model Y 保险如果是 $4,500，就是 $588〔估〕。</li>
+    <li><b>不能在家充电：</b>Model Y、bZ4X、EV6 和 RAV4 都在 $425–441，差不多；Atto 3、EV5 快充慢，掉得多〔估〕。</li>
+  </ul>
+
+  <h3>推荐顺序</h3>
+  <div class="concl">
+    <div class="item"><b>1. 特斯拉 Model Y RWD（2022–23 二手，约 $4.2 万）：</b>首选。<span class="badge mid">中</span><p class="hint">空间最大（同口径约 750 升，加 117 升前备箱）；电池可以天天充满（LFP）；特斯拉超充站最多最便宜；墨尔本二手 11 台〔硬〕；能先在 Splend 租（$469/周）。不确定：网约车保险估约 $7,000/年，每贵 $1,000 每周少 $19；基本保修 4 年/8 万公里多半已过，电池 8 年/16 万公里；墨尔本只有 4 个特斯拉保养点〔说〕。</p></div>
+    <div class="item"><b>2. 比亚迪 Atto 3（2023 二手，约 $3 万）：</b>省钱的选择，工具放得下才考虑。<span class="badge low">低到中</span><p class="hint">纸面每周最多，保修没有网约车除外（6 年/15 万公里），比亚迪墨尔本 20 个保养点〔硬〕，能在 RideLender 租（$370/周）。但后备箱 440 升，快充只有 80kW（只用外面充每周约 4 小时），二手只有两三台，2026 年 8 月已换代，保值差〔说/估〕。</p></div>
+    <div class="item"><b>3. 起亚 EV5（新车约 $5 万）：</b>要明确的网约车保修就选它。<span class="badge low">低到中</span><p class="hint">起亚写明网约车保 7 年/15 万公里〔硬〕；电池可以天天充满；513 升加 67 升前备箱。但二手基本没有，促销价 11 月 30 日结束；按准新二手 $5.9 万算每周约 $488；没有周租可以试〔估〕。</p></div>
+  </div>
+
+  <h3>往后放的，和原因</h3>
+  <ul>
+    <li><b>丰田 bZ4X：</b>电池容量保修（8 年剩 70%）不保网约车〔硬〕，其他保修还在。净赚第二，二手 21 台，可以先租（KINTO $385/周）。</li>
+    <li><b>起亚 EV6、现代 IONIQ 5：</b>都有充电模块（ICCU）召回，会失去动力，已有免费修复〔硬〕；墨尔本二手很少（2 台 / 0 台）；IONIQ 5 网约车保修只到 13 万公里〔硬〕。</li>
+    <li><b>比亚迪 Sealion 7、斯柯达 Enyaq：</b>二手只有准新车，要 $5–6 万；Enyaq 维修点只有 4–5 个〔说〕。</li>
+    <li><b>奔驰 EQB：</b>每年掉价约 24%，有电池起火召回（澳洲 6 台，修复方案还没出）〔硬〕；只有每周 5 个以上 Black 来回才值。</li>
+    <li><b>极氪 7X：</b>新品牌，墨尔本 2 个点，钣金在悉尼，掉价估得最快（25%/年）〔说/估〕。</li>
+    <li><b>沃尔沃 XC40、MG S5：</b>XC40 保修不保营运用途（只见到搜索摘要）〔说〕；MG S5 没有二手，品牌保值最差〔说〕。</li>
+    <li><b>不能在家充电就选 RAV4 混动：</b>保值最好、丰田网点多、约 580 升。Corolla Cross 混动纸面多 $38，但后备箱约 425 升，比 Atto 3 还小。Tucson、Sportage 混动 1 万公里一保，跑得多保养贵〔估〕。</li>
+  </ul>
+
+  <h3>买车前必做</h3>
+  <div class="concl">
+    <div class="item"><b>1. 要网约车保险报价：</b>全职跑，大多数普通车险不保：NRMA 每周最多 10 小时〔硬〕，ANZ 31 小时、QBE 32 小时〔说〕；特斯拉官方保险（Zurich）不保网约车〔硬〕。按顺序问：Uber App 里的按公里保险 → AAMI、Youi（如实说跑网约车）→ 保险经纪。少报用途，出事可能被拒赔。</div>
+    <div class="item"><b>2. 确认能充电：</b>10A 插座每晚 10 小时，一周约 70 小时；每年 5 万公里，Model Y 要插约 58 小时，Atto 3、EV5 约 70 小时，EQB 约 82 小时。跑得多要外面补充，或装 7kW 墙充（要房东书面同意）〔估〕。</div>
+    <div class="item"><b>3. 在 Uber 司机 App 里「添加车辆」：</b>输入车型和年份，确认能跑 Comfort Electric。</div>
+    <div class="item"><b>4. 带清洁工具去试装：</b>前备箱浅，放不了高的东西。</div>
+    <div class="item"><b>5. 查召回：</b>在 vehiclerecalls.gov.au 输入车架号（VIN）。最好从车行买（GST 能按比例抵），要保养记录和电池健康报告。</div>
+  </div>
+  <p class="hint">来源：Uber 墨尔本合格车型页、Toyota / Kia / Hyundai / BYD 保修条款、Zurich InsureMyTesla 和 NRMA 条款、vehiclerecalls.gov.au、比亚迪经销商查询页、carsguide 二手挂牌、AADA / Pickles / RedBook 保值数据、Splend / RideLender / KINTO / Baraka 挂牌价。笔记 notes/round9/w1-dd-specs、w2-dd-risk。仅供参考。</p>
+</section>
+
 <section class="card">
   <h2>机场来回：排队时用电脑干活</h2>
   <div class="ctl">
@@ -504,7 +545,7 @@ footer p { margin: 0; }
 
 <footer>
   <p>把握：高 = 至少 2 个独立的硬数据来源，或跨 5 年以上的硬数据，方向一致；中 = 只有 1 个硬数据来源或一年数据，或主要靠模型但能和独立数据对上；低 = 主要靠假设或个别案例。</p>
-  <p>数据来源：RTBA、Safe Transport Victoria、ABS、BITRE、Fair Work award 工资表、ATO、维州 SRO 印花税、Uber 和墨尔本机场官网、Uber 澳洲税务汇总说明、Karmo / Splend 挂牌价、Uber 墨尔本合格车型页、carsguide 和车行二手车挂牌、ESC 和电力公司电价、FuelNow 油价、ATO GST 裁定 GSTR 2004/8、Finder、招聘广告样本、JSA 招聘广告指数、Inside Airbnb、Simply Maid、悉尼 Uber 研究（Alexander 等 2022）、ESC 出租车数据、维州出行调查 VISTA、avionio 航班表、一位司机的税务汇总截图。仅供参考，不是财务或税务建议。</p>
+  <p>数据来源：RTBA、Safe Transport Victoria、ABS、BITRE、Fair Work award 工资表、ATO、维州 SRO 印花税、Uber 和墨尔本机场官网、Uber 澳洲税务汇总说明、Karmo / Splend 挂牌价、Uber 墨尔本合格车型页、车企保修条款、vehiclerecalls.gov.au、保险公司条款、carsguide 和车行二手车挂牌、ESC 和电力公司电价、FuelNow 油价、ATO GST 裁定 GSTR 2004/8、Finder、招聘广告样本、JSA 招聘广告指数、Inside Airbnb、Simply Maid、悉尼 Uber 研究（Alexander 等 2022）、ESC 出租车数据、维州出行调查 VISTA、avionio 航班表、一位司机的税务汇总截图。仅供参考，不是财务或税务建议。</p>
 </footer>
 </div>
 
@@ -930,6 +971,30 @@ footer p { margin: 0; }
       }
     },
     plugins: [tips(function (i, j) { return money(alt[i][j + 1]); })]
+  });
+
+  // 尽职调查：15 款 SUV 每周净赚（在家充电 / 只用外面快充），来自 notes/round9/r16-dd-compare.py
+  var dd = [["比亚迪 Atto 3", 633, 429], ["丰田 bZ4X", 567, 431], ["起亚 EV6", 550, 425], ["特斯拉 Model Y", 543, 435], ["起亚 EV5", 531, 345],
+            ["现代 IONIQ 5", 515, 382], ["比亚迪 Sealion 7", 510, 354], ["斯柯达 Enyaq", 500, 350], [["奔驰 EQB", "（只算 CE）"], 479, 270],
+            [["Corolla Cross", "混动"], 479, 479], ["RAV4 混动", 441, 441], ["本田 CR-V 混动", 428, 428], ["现代 Tucson 混动", 421, 421],
+            ["极氪 7X", 403, 301], [["Kluger 混动", "（只算 Comfort）"], 392, 392]];
+  console.assert(dd[3][1] - dd[10][1] === 102, "Model Y vs RAV4 should be +102 (r16)");
+  mk("c-dd", {
+    type: "bar",
+    data: { labels: dd.map(function (r) { return r[0]; }), datasets: [
+      { label: "在家充电（10A 插座）", data: dd.map(function (r) { return r[1]; }), backgroundColor: teal, maxBarThickness: 12 },
+      { label: "只用外面快充", data: dd.map(function (r) { return r[2]; }), backgroundColor: amber, maxBarThickness: 12 }
+    ] },
+    options: {
+      indexAxis: "y",
+      layout: { padding: { right: 44 } },
+      plugins: { legend: { position: "bottom", labels: { color: fg, boxWidth: 12, font: { size: narrow ? 10 : 12 } } }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + "：" + money(c.raw) + "/周"; } } } },
+      scales: {
+        x: { min: 0, max: 700, grid: grid, ticks: tick, title: { display: true, text: "每周净赚，澳元（25 小时，按 Uber 均价，税前）", color: muted } },
+        y: { grid: { display: false }, ticks: { color: fg, autoSkip: false, font: { size: narrow ? 10 : 12 } } }
+      }
+    },
+    plugins: [tips(function (i, j) { return money(dd[i][j + 1]); })]
   });
 
   // 一年一换对比一台开 3 年：[换车费, 卖车交的 GST, 抵税退回, 自己净掏]，来自 notes/round9/r13-yearly-swap.py
