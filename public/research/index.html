@@ -422,6 +422,18 @@ footer p { margin: 0; }
     <li><b>Kluger 混动跑 XL（7 座 SUV）：</b>不能在家充电时，每周约 10 个来回里有 3–4 个是 XL 单，就比 RAV4 和只用超充的 Model Y 划算；能在家充电，要近 9 成都是 XL 单才赶得上 Model Y（按司机报价永远赶不上）。XL 单价是按司机其他报价推的，墨尔本机场 XL 单量没有数据〔估〕。<span class="badge low">低</span></li>
   </ul>
 
+  <h3>Model Y 对 RAV4：掉价快、保险贵都算进去</h3>
+  <div class="cw tall"><canvas id="c-ylines" role="img" aria-label="每周约 830 公里时的养车成本，Model Y 在家充电对 RAV4 混动：电费或油费 20 对 108，保养和轮胎 54 对 37，网约车保险 115 对 75，掉价 158 对 129，车钱的利息 50 对 51，注册 24 对 24，合计 420 对 424 澳元。"></canvas></div>
+  <p class="hint">基准假设〔估〕：Model Y 每年掉价 20%、网约车保险 $6,000/年；RAV4 每年掉价 16%、保险 $3,900/年（插在凯美瑞和 Kluger 之间，没有报价）。Model Y 省下的油钱，正好被保险、掉价和轮胎吃掉；它多赚的部分全靠 Comfort Electric 单价高。</p>
+  <div class="cw tall"><canvas id="c-yrisk" role="img" aria-label="Model Y 每周比 RAV4 多赚多少（按 Uber 均价），每个来回都接到 Comfort Electric 单 / 只有一半接到：基准 109 / 56；掉价 25% 72 / 19；掉价 30% 35 / 负 17；保险 7000 91 / 38；保险 8000 73 / 20；电车路费 68 / 15；三样一起 13 / 负 40；RAV4 也按 20% 掉价 139 / 87 澳元。"></canvas></div>
+  <ul>
+    <li><b>只坏一样：</b>掉价快或保险贵，Model Y 基本都还领先。要每年掉价超过 28–35%，或者保险超过每年 $9,100–12,000，RAV4 才反超（前一个数是一半来回接到 CE 单，后一个数是每个来回都接到）〔估〕。</li>
+    <li><b>几样一起坏、CE 单又只接到一半：</b>RAV4 每周多赚约 $40–50〔估〕。<span class="badge low">低到中</span></li>
+    <li><b>保险最容易先弄清楚：</b>买车前，拿 Model Y 和 RAV4 各要一份网约车综合险报价。</li>
+    <li><b>RAV4 也有风险：</b>它现在的二手价偏高，以后也可能掉得更快；如果也按每年 20% 掉价，Model Y 反而多赚更多（图中最后一行）〔估〕。</li>
+  </ul>
+  <p class="hint">按司机报价算，每格少 $8–18。模型 notes/round9/r14-modely-vs-rav4.py。</p>
+
   <h3>一年一换为什么不划算</h3>
   <p>每买一台车都要交一笔「换车费」：一台开 3 年只交 1 次，每年换要交 3 次；抵税只能把这笔钱退回约四分之一。图中「自己净掏」= 换车费 + 卖车交的 GST − 抵税退回。<span class="badge">高</span></p>
   <div class="cw short"><canvas id="c-yearly" role="img" aria-label="一辆 4 万澳元的二手 Model Y，3 年里一台开到底和每年换一台对比：换车费 5000 对 14900；私人买的车卖时交 GST 1900 对 8700；抵税退回 1800 对 6100；自己净掏 5100 对 17600。每年换多亏约 12500。"></canvas></div>
@@ -513,14 +525,14 @@ footer p { margin: 0; }
   var narrow = window.innerWidth < 640;
   var mk = function (id, cfg) { return new Chart(document.getElementById(id), cfg); };
   var months = []; for (var m = 1; m <= 12; m++) months.push(m + "月");
-  // 横条图：在每根条的末端写数值，text(i, j) 给第 j 组第 i 根条的文字
+  // 横条图：在每根条的末端写数值（负数写在零线右边），text(i, j) 给第 j 组第 i 根条的文字
   var tips = function (text) {
     return { id: "tips", afterDatasetsDraw: function (ch) {
       var c = ch.ctx;
       c.save(); c.font = (narrow ? 10 : 12) + "px " + Chart.defaults.font.family; c.textBaseline = "middle";
       c.lineWidth = 3; c.lineJoin = "round"; c.strokeStyle = panel; c.fillStyle = fg;
       ch.data.datasets.forEach(function (d, j) { if (!ch.isDatasetVisible(j)) return;
-        ch.getDatasetMeta(j).data.forEach(function (b, i) { var t = text(i, j); c.strokeText(t, b.x + 6, b.y); c.fillText(t, b.x + 6, b.y); });
+        ch.getDatasetMeta(j).data.forEach(function (b, i) { var t = text(i, j), x = (d.data[i] < 0 ? b.base : b.x) + 6; c.strokeText(t, x, b.y); c.fillText(t, x, b.y); });
       });
       c.restore();
     } };
@@ -842,6 +854,48 @@ footer p { margin: 0; }
       }
     },
     plugins: [tips(function (i, j) { return money(net[i][j + 1]); })]
+  });
+
+  // Model Y 对 RAV4：每周成本逐项、坏情况下的领先，来自 notes/round9/r14-modely-vs-rav4.py
+  var ylines = [["电费 / 油费", 20, 108], ["保养和轮胎", 54, 37], ["网约车保险", 115, 75], ["掉价", 158, 129], ["车钱的利息", 50, 51], ["注册", 24, 24], ["合计", 420, 424]];
+  [1, 2].forEach(function (k) { var sum = ylines.slice(0, 6).reduce(function (a, r) { return a + r[k]; }, 0); console.assert(Math.abs(sum - ylines[6][k]) <= 1, "cost lines should sum to the total"); });
+  mk("c-ylines", {
+    type: "bar",
+    data: { labels: ylines.map(function (r) { return r[0]; }), datasets: [
+      { label: "Model Y 在家充电", data: ylines.map(function (r) { return r[1]; }), backgroundColor: teal, maxBarThickness: 16 },
+      { label: "RAV4 混动", data: ylines.map(function (r) { return r[2]; }), backgroundColor: amber, maxBarThickness: 16 }
+    ] },
+    options: {
+      indexAxis: "y",
+      layout: { padding: { right: 44 } },
+      plugins: { legend: { position: "bottom", labels: { color: fg, boxWidth: 12, font: { size: narrow ? 10 : 12 } } }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + "：" + money(c.raw) + "/周"; } } } },
+      scales: {
+        x: { min: 0, grid: grid, ticks: tick, title: { display: true, text: "每周养车成本，澳元（约 830 公里/周）", color: muted } },
+        y: { grid: { display: false }, ticks: { color: fg, autoSkip: false, font: { size: narrow ? 10 : 12 } } }
+      }
+    },
+    plugins: [tips(function (i, j) { return money(ylines[i][j + 1]); })]
+  });
+  var yrisk = [["基准", 109, 56], ["掉价 25%/年", 72, 19], ["掉价 30%/年", 35, -17], ["保险 $7,000/年", 91, 38], ["保险 $8,000/年", 73, 20],
+               [["收电车路费", "（约 5 分/公里）"], 68, 15], [["三样一起", "（25%、$7,000、路费）"], 13, -40], [["RAV4 也按", "20%/年掉价"], 139, 87]];
+  console.assert(yrisk[0][1] === 109 && yrisk[6][2] === -40, "risk rows should match r14");
+  var signed = function (v) { return (v < 0 ? "−$" : "+$") + Math.abs(v); };
+  mk("c-yrisk", {
+    type: "bar",
+    data: { labels: yrisk.map(function (r) { return r[0]; }), datasets: [
+      { label: "每个来回都接到 CE 单", data: yrisk.map(function (r) { return r[1]; }), backgroundColor: teal, maxBarThickness: 14 },
+      { label: "一半来回接到 CE 单", data: yrisk.map(function (r) { return r[2]; }), backgroundColor: amber, maxBarThickness: 14 }
+    ] },
+    options: {
+      indexAxis: "y",
+      layout: { padding: { right: 48 } },
+      plugins: { legend: { position: "bottom", labels: { color: fg, boxWidth: 12, font: { size: narrow ? 10 : 12 } } }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + "：" + signed(c.raw) + "/周"; } } } },
+      scales: {
+        x: { min: -60, max: 160, grid: { color: function (c) { return c.tick.value === 0 ? fg : line; }, lineWidth: function (c) { return c.tick.value === 0 ? 2 : 1; } }, ticks: tick, title: { display: true, text: "Model Y 多赚，澳元/周（负数 = RAV4 多）", color: muted } },
+        y: { grid: { display: false }, ticks: { color: fg, autoSkip: false, font: { size: narrow ? 10 : 12 } } }
+      }
+    },
+    plugins: [tips(function (i, j) { return signed(yrisk[i][j + 1]); })]
   });
 
   // 一年一换对比一台开 3 年：[换车费, 卖车交的 GST, 抵税退回, 自己净掏]，来自 notes/round9/r13-yearly-swap.py
