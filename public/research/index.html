@@ -388,7 +388,7 @@ footer p { margin: 0; }
   <p>一位开奔驰跑 Black 机场来回的司机〔说〕：他从凯美瑞（只能跑 Comfort）换到特斯拉（主要跑 Comfort Electric），再换到奔驰（跑 Black），认为跑 Uber 一定要电车。下面逐条核对。</p>
   <div class="concl">
     <div class="item"><b>「必须电车，油车收入上不去」：</b>不是规定。<span class="badge">高</span><p class="hint">混动、油车也能跑 X、Comfort、XL，GLC、Lexus ES 这类油车还能跑 Black；只有 Electric 和 Comfort Electric 要纯电〔硬〕。</p></div>
-    <div class="item"><b>「丰田混动只能跑 Comfort，Kluger 能跑 XL」：</b>对。<span class="badge">高</span><p class="hint">GLC 是 5 座，跑不了 XL；7 座 EQB 能跑 XL 和 Comfort Electric〔硬〕，能不能跑 Black 只在 Uber 机场页当例子出现，买前在 App 里确认。</p></div>
+    <div class="item"><b>「丰田混动只能跑 Comfort，Kluger 能跑 XL」：</b>对。<span class="badge">高</span><p class="hint">GLC 是 5 座，跑不了 XL；奔驰 EQB 能跑 XL（7 座版）、Comfort Electric 和 Black（Uber 墨尔本合格车型页，2026 年 9 月更新）〔硬〕。</p></div>
     <div class="item"><b>「一个来回到手：Black $110–120，Comfort Electric $80–90，Comfort $70 多」：</b>高低顺序对，金额偏低。<span class="badge mid">中</span><p class="hint">按 Uber 公布的航线均价扣抽成，见下图；司机说的像不加价时段的价〔估〕。</p></div>
     <div class="item"><b>「Comfort 在机场排队比 Comfort Electric 久」：</b>说得通，没有数据。<span class="badge low">低</span><p class="hint">电车能接 X、Electric、Comfort、Comfort Electric 四种单，混动只能接 X 和 Comfort 两种；Uber 在悉尼（2017 年的说明）、香港机场按档位分队〔硬〕，墨尔本怎么排没写。</p></div>
     <div class="item"><b>「长单差距更大」：</b>对。<span class="badge mid">中</span><p class="hint">机场到吉朗 86 公里，Black 比 Comfort 贵 $74，市区 27 公里只贵 $20；Comfort Electric 在这两条机场线上只比 Comfort 贵约一成（悉尼机场 6%，墨尔本 Sunbury 线 27%）〔硬〕。</p></div>
@@ -403,9 +403,10 @@ footer p { margin: 0; }
     <div class="item"><b>Kluger 混动（7 座）：</b>X、Comfort、XL</div>
     <div class="item"><b>特斯拉 Model 3 / Y：</b>X、Electric、Comfort、Comfort Electric</div>
     <div class="item"><b>奔驰 GLC：</b>X、Comfort、Black</div>
-    <div class="item"><b>奔驰 EQB 7 座：</b>X、Electric、Comfort、Comfort Electric、XL，Black 待确认</div>
+    <div class="item"><b>奔驰 EQB 7 座：</b>X、Electric、Comfort、Comfort Electric、XL、Black</div>
+    <div class="item"><b>MG4、MG ZS EV、比亚迪 Dolphin：</b>只能跑 X、Electric，跑不了 Comfort Electric</div>
   </div>
-  <p class="hint">Comfort、Comfort Electric、Black 只收 7 年以内的车，还要先跑满 20 单、评分 ≥4.85；Black 另要上完 Black 课程〔硬〕。来源：Uber 墨尔本车辆要求页、Uber 租车页、Splend 车型页。</p>
+  <p class="hint">Comfort、Comfort Electric、Black 只收 7 年以内的车，还要先跑满 20 单、评分 ≥4.85；Black 另要上完 Black 课程〔硬〕。名单按车型列，不分动力：名单上 GLC 也有 Comfort Electric，但只有纯电版能跑。来源：Uber 墨尔本合格车型页（2026-09-23 更新）、车辆要求页、租车页、Splend 车型页。</p>
 
   <h3>一个机场来回，司机到手多少</h3>
   <div class="cw short"><canvas id="c-tier" role="img" aria-label="市区到机场再回市区一个来回，司机扣抽成后到手：按 Uber 均价，X 80、Comfort 95、Comfort Electric 107、XL 118、Black 130 澳元；司机自己说的，Comfort 75、Comfort Electric 85、Black 115 澳元。"></canvas></div>
@@ -433,6 +434,17 @@ footer p { margin: 0; }
     <li><b>RAV4 也有风险：</b>它现在的二手价偏高，以后也可能掉得更快；如果也按每年 20% 掉价，Model Y 反而多赚更多（图中最后一行）〔估〕。</li>
   </ul>
   <p class="hint">按司机报价算，每格少 $8–18。模型 notes/round9/r14-modely-vs-rav4.py。</p>
+
+  <h3>除了 Model Y，还能选哪些电动 SUV</h3>
+  <p>清洁也要用车，所以只列 SUV。下面这些都在 Uber 墨尔本合格车型名单上，能跑 Comfort Electric（2019 年及以后的车）〔硬〕。<span class="badge">能跑 CE：高</span><span class="badge low">每周净赚：低</span></p>
+  <div class="cw"><canvas id="c-alt" role="img" aria-label="每周开 25 小时、在家充电，跑 Comfort Electric 的每周净赚估算（按 Uber 均价 / 按司机报价）：比亚迪 Atto 3 602 / 408，Model Y 548 / 354，起亚 EV5 532 / 338；对比 RAV4 混动跑 Comfort 438 / 263 澳元。"></canvas></div>
+  <div class="concl">
+    <div class="item"><b>特斯拉 Model Y（中型 SUV）：</b>首选。空间最大，特斯拉快充网最方便；2022–23 年二手 $3.85–4.35 万〔硬〕。</div>
+    <div class="item"><b>比亚迪 Atto 3（小 SUV）：</b>最便宜，2023 年二手 $2.7–3.3 万〔硬〕。后备箱比 RAV4 小一号（约 440 升〔说〕），二手保值差，比亚迪维修点少，外面非特斯拉快充每度电更贵。工具放得下就是省钱的选择。</div>
+    <div class="item"><b>起亚 EV5（SUV）：</b>空间接近 Model Y（513 升加前备箱 67 升，起亚的数字〔说〕），保修长；2025 年才上市，二手少，约 $4.5 万〔估〕。</div>
+    <div class="item"><b>现代 IONIQ 5、丰田 bZ4X、比亚迪 Sealion 7（SUV）：</b>也能跑 Comfort Electric，二手价和成本还没查，看车时一起比。bZ4X 有 KINTO 周租 $385〔硬〕，可以租来试。</div>
+  </div>
+  <p class="hint">每周净赚按上面同样的假设（每周 25 小时、在家充电）〔估〕。Atto 3、EV5 的保险和掉价是按 Model Y 推的，没有报价；差 $50 以内都在误差范围里，不能说谁一定多赚。特斯拉 Model 3 也能跑 Comfort Electric、更省钱，但它是轿车，没列。不管看中哪台，买前在 Uber 司机 App 的「添加车辆」里确认车型和年份，并要一份网约车保险报价。模型 notes/round9/r15-ev-alternatives.py。</p>
 
   <h3>一年一换为什么不划算</h3>
   <p>每买一台车都要交一笔「换车费」：一台开 3 年只交 1 次，每年换要交 3 次；抵税只能把这笔钱退回约四分之一。图中「自己净掏」= 换车费 + 卖车交的 GST − 抵税退回。<span class="badge">高</span></p>
@@ -491,7 +503,7 @@ footer p { margin: 0; }
 
 <footer>
   <p>把握：高 = 至少 2 个独立的硬数据来源，或跨 5 年以上的硬数据，方向一致；中 = 只有 1 个硬数据来源或一年数据，或主要靠模型但能和独立数据对上；低 = 主要靠假设或个别案例。</p>
-  <p>数据来源：RTBA、Safe Transport Victoria、ABS、BITRE、Fair Work award 工资表、ATO、维州 SRO 印花税、Uber 和墨尔本机场官网、Uber 澳洲税务汇总说明、Karmo / Splend 挂牌价、carsguide 和车行二手车挂牌、ESC 和电力公司电价、FuelNow 油价、ATO GST 裁定 GSTR 2004/8、Finder、招聘广告样本、JSA 招聘广告指数、Inside Airbnb、Simply Maid、悉尼 Uber 研究（Alexander 等 2022）、ESC 出租车数据、维州出行调查 VISTA、avionio 航班表、一位司机的税务汇总截图。仅供参考，不是财务或税务建议。</p>
+  <p>数据来源：RTBA、Safe Transport Victoria、ABS、BITRE、Fair Work award 工资表、ATO、维州 SRO 印花税、Uber 和墨尔本机场官网、Uber 澳洲税务汇总说明、Karmo / Splend 挂牌价、Uber 墨尔本合格车型页、carsguide 和车行二手车挂牌、ESC 和电力公司电价、FuelNow 油价、ATO GST 裁定 GSTR 2004/8、Finder、招聘广告样本、JSA 招聘广告指数、Inside Airbnb、Simply Maid、悉尼 Uber 研究（Alexander 等 2022）、ESC 出租车数据、维州出行调查 VISTA、avionio 航班表、一位司机的税务汇总截图。仅供参考，不是财务或税务建议。</p>
 </footer>
 </div>
 
@@ -896,6 +908,27 @@ footer p { margin: 0; }
       }
     },
     plugins: [tips(function (i, j) { return signed(yrisk[i][j + 1]); })]
+  });
+
+  // 其他能跑 CE 的电车：每周净赚（在家充电，25 小时），来自 notes/round9/r15-ev-alternatives.py
+  var alt = [["比亚迪 Atto 3", 602, 408], ["特斯拉 Model Y", 548, 354], ["起亚 EV5", 532, 338], [["RAV4 混动", "（Comfort，对比）"], 438, 263]];
+  console.assert(alt[1][1] === net[3][1] && alt[3][1] === net[2][1], "Model Y and RAV4 rows should match c-net");
+  mk("c-alt", {
+    type: "bar",
+    data: { labels: alt.map(function (r) { return r[0]; }), datasets: [
+      { label: "按 Uber 均价", data: alt.map(function (r) { return r[1]; }), backgroundColor: teal, maxBarThickness: 16 },
+      { label: "按司机报价", data: alt.map(function (r) { return r[2]; }), backgroundColor: amber, maxBarThickness: 16 }
+    ] },
+    options: {
+      indexAxis: "y",
+      layout: { padding: { right: 44 } },
+      plugins: { legend: { position: "bottom", labels: { color: fg, boxWidth: 12, font: { size: narrow ? 10 : 12 } } }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + "：" + money(c.raw) + "/周"; } } } },
+      scales: {
+        x: { min: 0, grid: grid, ticks: tick, title: { display: true, text: "每周净赚，澳元（25 小时，在家充电，税前）", color: muted } },
+        y: { grid: { display: false }, ticks: { color: fg, autoSkip: false, font: { size: narrow ? 10 : 12 } } }
+      }
+    },
+    plugins: [tips(function (i, j) { return money(alt[i][j + 1]); })]
   });
 
   // 一年一换对比一台开 3 年：[换车费, 卖车交的 GST, 抵税退回, 自己净掏]，来自 notes/round9/r13-yearly-swap.py
